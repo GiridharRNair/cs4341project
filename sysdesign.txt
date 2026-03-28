@@ -1,0 +1,208 @@
+Component Diagram
+
+
+Parts List
+
+Opcode Input, 4-bit Input, carries the operation code that selects which robot command is executed.
+
+Data Input A, 8-bit Input, provides external 8-bit operand data used by speed/position datapaths.
+
+Data Input B, 8-bit Input, provides a second external 8-bit operand data source for arithmetic/select operations.
+
+Heading Input, 2-bit Input, provides external 2-bit heading-related data.
+
+Reset, 1-bit Input, asynchronously clears state registers when asserted.
+
+Clock, 1-bit Clock source, drives synchronous updates of all D flip-flop registers.
+
+Opcode Decoder, 4-to-16 Decoder, converts the 4-bit opcode into one-hot command control lines.
+
+Mode Decoder, 2-to-4 Decoder, generates sub-control signals for multiway selection in the position logic.
+
+Speed Adder, 8-bit Adder, computes next speed value for increment/decrement style operations.
+
+Heading Adder, 2-bit Adder, computes next heading value (such as turn operations).
+
+X Position Adder, 8-bit Adder, computes next X-position value.
+
+Y Position Adder, 8-bit Adder, computes next Y-position value.
+
+Two’s Complement Block (X path), 8-bit TwoComplement, negates an operand to support subtraction-like movement updates.
+
+Two’s Complement Block (Y path), 8-bit TwoComplement, negates an operand to support subtraction-like movement updates.
+
+Speed Register, 8-bit D flip-flop, stores current speed state.
+
+Heading Register, 2-bit D flip-flop, stores current heading state.
+
+LED Color Register, 2-bit D flip-flop, stores current LED color code.
+
+LED Signal Register, 1-bit D flip-flop, stores LED on/off state.
+
+Fire Bullets Register, 1-bit D flip-flop, stores fire-enable state.
+
+X Position Register, 8-bit D flip-flop, stores current X position.
+
+Y Position Register, 8-bit D flip-flop, stores current Y position.
+
+Multiplexers (multiple 2:1 blocks, widths 1/2/8), selection elements that choose hold/update and operand sources throughout the datapath.
+
+OR Gates (multiple), combine decoder/control lines into composite control enable.
+
+Splitter, 2-bit splitter, breaks/combines small control/data fields for logic fanout.
+
+Speed Output, 8-bit Output, exposes speed state to the testbench.
+
+Heading Output, 2-bit Output, exposes the heading state to the testbench.
+
+LED Color Output, 2-bit Output, exposes LED color state to the testbench.
+
+LED Signal Output, 1-bit Output, exposes LED on/off state to the testbench.
+
+Fire Bullets Signal Output, 1-bit Output, exposes fire state to the testbench.
+
+X Position Output, 8-bit Output, exposes X-position state to the testbench.
+
+Y Position Output, 8-bit Output, exposes Y-position state to the testbench.
+
+Weapon Type Register, 2-bit D flip-flop, stores the currently selected weapon mode.
+
+
+Input List
+
+Clock is a 1-bit input that provides the timing signal used to update all synchronous registers in the design.
+
+Reset is a 1-bit input that clears the state registers when asserted.
+
+Opcode Input is a 4-bit input that selects which robot command is executed.
+
+Data Input A is an 8-bit input that provides operand data to the arithmetic and movement datapaths.
+
+Data Input B is an 8-bit input that provides a second operand source to the arithmetic and movement datapaths.
+
+Heading Input is a 2-bit input that provides heading related data used by turn and direction logic.
+
+
+
+Output List
+
+Speed is an 8-bit output that represents the current speed value stored in the Speed Register.
+
+Heading is a 2-bit output that represents the current heading value stored in the Heading Register.
+
+LED Color is a 2-bit output that represents the current LED color code stored in the LED Color Register.
+
+LED Signal is a 1-bit output that represents whether the LED is currently on or off.
+
+Fire Bullets Signal is a 1-bit output that represents whether firing is currently enabled.
+
+X Position is an 8-bit output that represents the current X coordinate stored in the X Position Register.
+
+Y Position is an 8-bit output that represents the current Y coordinate stored in the Y Position Register.
+
+Weapon Type, 2-bit output, exposes the current weapon mode for testbench/monitoring.
+
+
+Interface List
+
+Opcode Command Bus, 4 bits, connects Opcode Input to Opcode Decoder, carrying the command value into decode logic.
+
+Opcode Control Lines, 16 bits, connects Opcode Decoder to control selection logic, activating one command path at a time.
+
+Speed Current Value Bus, 8 bits, connects Speed Register to Speed output and speed feedback logic, carrying the stored speed state.
+
+Speed Next Value Bus, 8 bits, connects speed selection arithmetic logic to Speed Register input, carrying the next speed value.
+
+Heading Current Value Bus, 2 bits, connects Heading Register to Heading output and heading feedback logic, carrying the stored heading state.
+
+Heading Next Value Bus, 2 bits, connects heading selection arithmetic logic to Heading Register input, carrying the next heading value.
+
+Led Color Current Value Bus, 2 bits, connects LED Color Register to LED Color output and color feedback logic, carrying the stored color state.
+
+Led Color Next Value Bus, 2 bits, connects LED color selection logic to LED Color Register input, carrying the next color code.
+
+Led Signal Current Value Bus, 1 bit, connects LED Signal Register to LED Signal output and control feedback logic, carrying the stored LED state.
+
+Led Signal Next Value Bus, 1 bit, connects LED signal selection logic to LED Signal Register input, carrying the next LED on off value.
+
+Fire Current Value Bus, 1 bit, connects Fire Bullets Register to Fire Bullets output and control feedback logic, carrying the stored fire state.
+
+Fire Next Value Bus, 1 bit, connects fire selection logic to Fire Bullets Register input, carrying the next fire enable value.
+
+X Position Current Value Bus, 8 bits, connects X Position Register to X Position output and X arithmetic feedback logic, carrying the stored X state.
+
+X Position Next Value Bus, 8 bits, connects X position selection arithmetic logic to X Position Register input, carrying the next X value.
+
+Y Position Current Value Bus, 8 bits, connects Y Position Register to Y Position output and Y arithmetic feedback logic, carrying the stored Y state.
+
+Y Position Next Value Bus, 8 bits, connects Y position selection arithmetic logic to Y Position Register input, carrying the next Y value.
+
+X Signed Operand Bus, 8 bits, connects X twos complement logic to X arithmetic selection logic, carrying negated operand values for subtract style updates.
+
+Y Signed Operand Bus, 8 bits, connects Y twos complement logic to Y arithmetic selection logic, carrying negated operand values for subtract style updates.
+
+Mode Select Lines, 4 bits, connects Mode Decoder to movement control multiplexers, selecting movement behavior variants.
+
+Weapon Type Current Value Bus, 2 bits, carries the stored weapon mode from Weapon Type Register to output/selection logic.
+
+Weapon Type Next Value Bus, 2 bits, carries the next weapon mode into Weapon Type Register.
+
+Weapon Type Enable Line, 1 bit, enables weapon register update when opcode 1100 is active.
+
+
+
+
+
+Opcode Table
+
+Binary Value
+Operation
+Description
+0000
+Increase speed
+Increments speed register according to speed datapath selection.
+0001
+Decrease speed
+Decrements speed register according to speed datapath selection.
+0010
+Turn 90 degrees
+Updates heading register by one turn step.
+0011
+Set LED color blue
+Writes LED color register to blue code 01.
+0100
+Set LED color green
+Writes LED color register to green code 10.
+0101
+Set LED color red
+Writes LED color register to red code 11.
+0110
+Turn on LED
+Sets LED signal register to 1.
+0111
+Turn off LED
+Clears LED signal register to 0.
+1000
+Start firing bullets
+Sets fire bullets register to 1.
+1001
+Stop firing bullets
+Clears fire bullets register to 0.
+1010
+Move X position
+Updates X position register through X arithmetic datapath.
+1011
+Move Y position
+Updates Y position register through Y arithmetic datapath.
+1100
+Cycle Through Weapon Type
+Advances weapon mode through 00, 01, 10, 11 and wraps around.
+
+00: Normal bullets 
+01: Spread shot 
+10: Laser beam 
+11: Missile/heavy shot
+
+
+Citations
+CircuitVerse. 2026. Online Digital Logic Circuit Simulator. https://circuitverse.org/

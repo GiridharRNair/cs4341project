@@ -12,6 +12,9 @@ module reg_n #(
 
     assign d_sel = en ? d : q;
 
+    // STRUCTURAL: The 'generate...for' loop executes at ELABORATION TIME (compile-time),
+    // not simulation time. It unrolls into separate dff_async instantiations (one per bit).
+    // This is parametric component instantiation, not algorithmic programming.
     generate
         for (i = 0; i < WIDTH; i = i + 1) begin : gen_dff
             dff_async u_dff (

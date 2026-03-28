@@ -7,5 +7,7 @@ module adder_n #(
     output wire [WIDTH-1:0] sum,
     output wire cout
 );
+    // STRUCTURAL: Single concurrent assignment (no behavioral if/else/always blocks).
+    // The '+' operator is combinational logic, not a procedural operation.
     assign {cout, sum} = a + b + cin;
 endmodule
