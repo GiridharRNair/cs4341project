@@ -12,6 +12,7 @@ module robot_breadboard (
     output wire fire_bullets_signal,
     output wire [7:0] x_position,
     output wire [7:0] y_position,
+    output wire [1:0] weapon_type,
     output wire [7:0] status,
     output wire [15:0] feedback_loop,
     output wire [31:0] memory_reg32
@@ -50,6 +51,11 @@ module robot_breadboard (
     wire [7:0] y_q;
     wire [7:0] y_d;
     wire y_en;
+
+    wire [1:0] weapon_q;
+    wire [1:0] weapon_d;
+    wire weapon_en;
+    wire weapon_cout;
 
     wire [15:0] feedback_q;
     wire [15:0] feedback_d;
@@ -284,10 +290,20 @@ module robot_breadboard (
     assign y_d = y_mode_selected;
     assign y_en = opcode_lines[11];
 
-    assign feedback_d = {x_q, y_q};
-    assign mem32_d = {opcode, data_in_a, data_in_b, heading_in, feedback_q[15:6]};
+    adder_n #(.WIDTH(2)) u_weapon_cycle (
+        .a(weapon_q),
+        .b(2'b01),
+        .cin(1'b0),
+        .sum(weapon_d),
+        .cout(weapon_cout)
+    );
 
-    assign reserved_opcode = opcode_lines[12] | opcode_lines[13] | opcode_lines[14] | opcode_lines[15];
+    assign weapon_en = opcode_lines[12];
+
+    assign feedback_d = {x_q, y_q};
+    assign mem32_d = {opcode, data_in_a, data_in_b, weapon_q, feedback_q[15:6]};
+
+    assign reserved_opcode = opcode_lines[13] | opcode_lines[14] | opcode_lines[15];
     assign speed_dec_at_zero = opcode_lines[1] & (speed_q == 8'h00);
     assign hold_mode_move = (opcode_lines[10] | opcode_lines[11]) & mode_lines[3];
 
@@ -352,6 +368,14 @@ module robot_breadboard (
         .q(y_q)
     );
 
+    reg_n #(.WIDTH(2)) u_weapon_reg (
+        .clk(clk),
+        .reset(reset),
+        .en(weapon_en),
+        .d(weapon_d),
+        .q(weapon_q)
+    );
+
     reg_n #(.WIDTH(16)) u_feedback_reg (
         .clk(clk),
         .reset(reset),
@@ -383,6 +407,7 @@ module robot_breadboard (
     assign fire_bullets_signal = fire_q[0];
     assign x_position = x_q;
     assign y_position = y_q;
+    assign weapon_type = weapon_q;
     assign status = status_q;
     assign feedback_loop = feedback_q;
     assign memory_reg32 = mem32_q;

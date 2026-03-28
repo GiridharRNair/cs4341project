@@ -15,6 +15,7 @@ module robot_breadboard_tb;
     wire fire_bullets_signal;
     wire [7:0] x_position;
     wire [7:0] y_position;
+    wire [1:0] weapon_type;
     wire [7:0] status;
     wire [15:0] feedback_loop;
     wire [31:0] memory_reg32;
@@ -33,6 +34,7 @@ module robot_breadboard_tb;
         .fire_bullets_signal(fire_bullets_signal),
         .x_position(x_position),
         .y_position(y_position),
+        .weapon_type(weapon_type),
         .status(status),
         .feedback_loop(feedback_loop),
         .memory_reg32(memory_reg32)
@@ -55,10 +57,10 @@ module robot_breadboard_tb;
             @(posedge clk);
             #1;
 
-            $display("t=%0t op=%b a=%02h b=%02h h=%b | speed=%02h heading=%b ledC=%b led=%b fire=%b x=%02h y=%02h status=%02h fb=%04h mem=%08h",
+            $display("t=%0t op=%b a=%02h b=%02h h=%b | speed=%02h heading=%b ledC=%b led=%b fire=%b x=%02h y=%02h weapon=%b status=%02h fb=%04h mem=%08h",
                 $time, opcode, data_in_a, data_in_b, heading_in,
                 speed, heading, led_color, led_signal, fire_bullets_signal,
-                x_position, y_position, status, feedback_loop, memory_reg32);
+                x_position, y_position, weapon_type, status, feedback_loop, memory_reg32);
 
             if (status != 8'h00) begin
                 $display("  status-note: non-zero status indicates warning/error/incomplete behavior");
@@ -102,8 +104,13 @@ module robot_breadboard_tb;
         run_cmd(4'b1011, 8'h00, 8'h00, 2'b10); // Y feedback-add
         run_cmd(4'b1010, 8'h55, 8'hAA, 2'b11); // X hold (status warning)
 
-        // Reserved opcodes to exercise status handling.
+        // Weapon type cycle opcode.
         run_cmd(4'b1100, 8'h00, 8'h00, 2'b00);
+        run_cmd(4'b1100, 8'h00, 8'h00, 2'b00);
+        run_cmd(4'b1100, 8'h00, 8'h00, 2'b00);
+        run_cmd(4'b1100, 8'h00, 8'h00, 2'b00);
+
+        // Reserved opcodes to exercise status handling.
         run_cmd(4'b1111, 8'h00, 8'h00, 2'b00);
 
         // Speed underflow warning.
