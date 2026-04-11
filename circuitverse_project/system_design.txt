@@ -1,0 +1,161 @@
+Component Diagram
+
+
+CircuitVerse Project Link: https://circuitverse.org/users/413178/projects/robot-03cbcf2f-4fcf-447c-bf3a-e71604f0f60a
+
+Parts List
+
+Speed Register, 8-bit D flip-flop, keeps the robot speed state persistent between commands.
+Heading Register, 2-bit D flip-flop, keeps the robot direction state used by turn and move commands.
+LED Color Register, 2-bit D flip-flop, stores the current LED color selection.
+LED Signal Register, 1-bit D flip-flop, stores whether the LED is on or off.
+Fire Bullets Register, 1-bit D flip-flop, stores whether firing mode is enabled.
+X Position Register, 8-bit D flip-flop, keeps the robot X coordinated across movement steps.
+Y Position Register, 8-bit D flip-flop, keeps the robot Y coordinated across movement steps.
+Weapon Type Register, 2-bit D flip-flop, stores the currently selected weapon mode.
+Speed Operand Mux, 8-bit 2:1 multiplexer, selects which external data input participates in speed updates.
+Heading Update Mux, 2-bit 2:1 multiplexer, selects whether the heading keeps its value or takes a turn update.
+LED Color Update Mux, 2-bit 2:1 multiplexer, selects whether LED color holds or changes to a commanded color.
+LED Signal Update Mux, 1-bit 2:1 multiplexer, selects whether LED on/off state holds or changes.
+Fire Signal Update Mux, 1-bit 2:1 multiplexer, selects whether fire-enable state holds or changes.
+Y Signed-Operand Mux, 8-bit 2:1 multiplexer, selects forward or reverse movement operand for Y updates.
+X Signed-Operand Mux, 8-bit 2:1 multiplexer, selects forward or reverse movement operand for X updates.
+X Position Update Mux, 8-bit 2:1 multiplexer, selects whether X position holds or applies movement.
+Y Position Update Mux, 8-bit 2:1 multiplexer, selects whether Y position holds or applies movement.
+Weapon Type Update Mux, 2-bit 2:1 multiplexer, selects whether weapon type holds or advances to the next mode.
+Speed Update Mux, 8-bit 2:1 multiplexer, selects whether speed holds or applies increment/decrement.
+Weapon Cycle Adder, 2-bit adder, computes the next weapon type during cycle-weapon commands.
+X Position Adder, 8-bit adder, computes X coordinate updates during movement commands.
+Y Position Adder, 8-bit adder, computes Y coordinate updates during movement commands.
+Heading Turn Adder, 2-bit adder, computes heading updates during turn commands.
+Speed Update Adder, 8-bit adder, computes speed increments and decrements.
+Y Reverse Operand Generator, 8-bit two's complement block, generates reverse-direction speed value for Y movement handling.
+X Reverse Operand Generator, 8-bit two's complement block, generates reverse-direction speed value for X movement handling.
+Opcode Decoder, 4-to-16 decoder, converts each opcode into a dedicated command enable.
+Operation Demultiplexer, 1-to-4 demultiplexer, routes movement control to the heading-selected branch.
+Speed Command Combiner, 2-input OR gate, combines increase/decrease speed command conditions.
+LED Blue/Red Command Combiner, 2-input OR gate, combines LED blue and red command conditions.
+LED Green/Red Command Combiner, 2-input OR gate, combines LED green and red command conditions.
+LED Color Update Enable Combiner, 4-input OR gate, generates the overall LED color update enable.
+LED On/Off Command Combiner, 2-input OR gate, combines LED on and LED off command conditions.
+Fire Start/Stop Command Combiner, 2-input OR gate, combines fire start and fire stop command conditions.
+Y Movement Enable Combiner, 2-input OR gate, enables Y coordinate updates for the applicable movement directions.
+X Movement Enable Combiner, 2-input OR gate, enables X coordinate updates for the applicable movement directions.
+Move Command Combiner, 2-input OR gate, combines move-forward and move-backward command conditions.
+Y Signed-Select XOR, 2-input XOR gate, determines whether Y movement uses forward or reverse operand polarity.
+X Signed-Select XOR, 2-input XOR gate, determines whether X movement uses forward or reverse operand polarity.
+Splitter, 2-bit splitter/combiner, assembles/distributes LED color control bits as a 2-bit value.
+
+Input List
+
+Opcode Input, 4-bits, selects the operation to execute in the current cycle.
+Data Input A, 8-bits, provides operand data used by speed/X arithmetic paths.
+Data Input B, 8-bits, provides operand data used by Y arithmetic and related datapath operations.
+Heading Input, 2-bits, provides directional control mode for movement/heading updates.
+Weapon Control Input, 2-bits, provides control data for weapon-type sequencing logic.
+Clock, 1-bit, defines the active edge when state registers latch next-state values.
+Reset, 1-bit, asynchronously clears state registers to initial values when asserted.
+Y Reverse Speed Operand, 8-bits, internal signed input used by Y movement arithmetic when reverse-direction movement is selected.
+X Reverse Speed Operand, 8-bits, internal signed input used by X movement arithmetic when reverse-direction movement is selected.
+
+Output List
+
+Speed, 8-bits, represents the current speed state of the robot.
+Heading, 2-bits, represents the current heading direction code.
+LED Color, 2-bits, represents the currently selected LED color.
+LED Signal, 1-bit, indicates whether the LED output is enabled.
+Fire Bullets Signal, 1-bit, indicates whether firing mode is enabled.
+X Position, 8-bits, represents the current robot X coordinate.
+Y Position, 8-bits, represents the current robot Y coordinate.
+Weapon Type, 2-bits, represents the current active weapon mode.
+
+
+
+Interface List
+
+Opcode Command Bus, 4-bits, connects Opcode Input to the Opcode Decoder to generate one-hot command lines.
+Decoded Command Lines, 16-bits, connect Opcode Decoder outputs to command-gating logic and operation-select logic.
+Speed Next-Value Path, 8-bits, connects speed datapath logic (adder and mux chain) to the Speed Register D input.
+Speed Feedback Path, 8-bits, connects Speed Register Q output back into arithmetic and mux logic for feedback operations.
+Heading Next-Value Path, 2-bits, connects heading arithmetic and select logic to the Heading Register D input.
+Heading Feedback Path, 2-bits, connects Heading Register Q output to heading control and movement logic.
+LED Color Next-Value Path, 2-bits, connects LED color select logic to the LED Color Register.
+LED Color Feedback Path, 2-bits, connects LED Color Register output to the external output and dependent control logic.
+LED Signal Next-Value Path, 1-bit, connects LED on/off select logic to the LED Signal Register.
+LED Signal Feedback Path, 1-bit, connects LED Signal Register output to output and gating logic.
+Fire Control Next-Value Path, 1-bit, connects fire enable/disable select logic to the Fire Bullets Register.
+Fire Control Feedback Path, 1-bit, connects Fire Bullets Register output to the Fire Bullets Signal output.
+X Position Next-Value Path, 8-bits, connects X movement arithmetic/select logic to the X Position Register.
+X Position Feedback Path, 8-bits, connects X Position Register output to external output and feedback arithmetic logic.
+Y Position Next-Value Path, 8-bits, connects Y movement arithmetic/select logic to the Y Position Register.
+Y Position Feedback Path, 8-bits, connects Y Position Register output to external output and feedback arithmetic logic.
+Weapon Type Next-Value Path, 2-bits, connects weapon control arithmetic/select logic to the Weapon Type Register.
+Weapon Type Feedback Path, 2-bits, connects Weapon Type Register output to the Weapon Type output and command logic.
+Control Select Lines, 1-bit and 2-bit control lines, connect OR/XOR/decoder outputs to mux select inputs across datapath branches.
+
+
+
+
+Opcode Table
+
+Binary Value
+Operation
+Description
+0000
+Increase speed
+Increase speed, increments the speed register value by one.
+0001
+Decrease speed
+Decrease speed, decrements the speed register value by one.
+0010
+Turn 90 degrees
+Turn 90 degrees, rotate heading by one step (modulo 4).
+0011
+Set LED color blue
+Change LED color to blue, load LED Color = 01.
+0100
+Set LED color green
+Change LED color to green, load LED Color = 10.
+0101
+Set LED color red
+Change LED color to red, load LED Color = 11.
+0110
+Turn on LED
+Turn on LED, set LED Signal = 1.
+0111
+Turn off LED
+Turn off LED, set LED Signal = 0.
+1000
+Start firing bullets
+Start firing bullets, set Fire Bullets Signal = 1.
+1001
+Stop firing bullets
+Stop firing bullets, set Fire Bullets Signal = 0.
+1010
+Move Forward
+Move forward, update position based on heading/movement datapath configuration.
+1011
+Move Backward
+Move backward, update position in reverse direction via movement datapath configuration.
+1100
+Cycle Through Weapon Type
+Cycle through weapon type, advances Weapon Type through the 2-bit map.
+
+00: Normal bullets 
+01: Spread shot 
+10: Laser beam 
+11: Missile/heavy shot
+1101
+Reserved/invalid opcode
+Not assigned to a valid operation in circuit.
+1110
+Reserved/invalid opcode
+Not assigned to a valid operation in circuit.
+1111
+Reserved/invalid opcode
+Not assigned to a valid operation in circuit.
+
+
+Citations
+CircuitVerse. 2026. Online Digital Logic Circuit Simulator. https://circuitverse.org/
+

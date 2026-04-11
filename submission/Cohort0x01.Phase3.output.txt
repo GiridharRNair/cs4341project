@@ -1,0 +1,32 @@
+--- Robot Breadboard Testbench Start ---
+t=26000 op=0000 a=03 b=00 h=00 | speed=03 heading=00 ledC=00 led=0 fire=0 x=00 y=00 weapon=00 status=00 fb=0000 mem=00300000
+t=36000 op=0000 a=07 b=00 h=00 | speed=0a heading=00 ledC=00 led=0 fire=0 x=00 y=00 weapon=00 status=00 fb=0000 mem=00700000
+t=46000 op=0001 a=00 b=fe h=00 | speed=08 heading=00 ledC=00 led=0 fire=0 x=00 y=00 weapon=00 status=00 fb=0000 mem=100fe000
+t=56000 op=0010 a=00 b=00 h=01 | speed=08 heading=01 ledC=00 led=0 fire=0 x=00 y=00 weapon=00 status=00 fb=0000 mem=20000000
+t=66000 op=0011 a=00 b=00 h=00 | speed=08 heading=01 ledC=01 led=0 fire=0 x=00 y=00 weapon=00 status=00 fb=0000 mem=30000000
+t=76000 op=0100 a=00 b=00 h=00 | speed=08 heading=01 ledC=10 led=0 fire=0 x=00 y=00 weapon=00 status=00 fb=0000 mem=40000000
+t=86000 op=0101 a=00 b=00 h=00 | speed=08 heading=01 ledC=11 led=0 fire=0 x=00 y=00 weapon=00 status=00 fb=0000 mem=50000000
+t=96000 op=0110 a=00 b=00 h=00 | speed=08 heading=01 ledC=11 led=1 fire=0 x=00 y=00 weapon=00 status=00 fb=0000 mem=60000000
+t=106000 op=0111 a=00 b=00 h=00 | speed=08 heading=01 ledC=11 led=0 fire=0 x=00 y=00 weapon=00 status=00 fb=0000 mem=70000000
+t=116000 op=1000 a=00 b=00 h=00 | speed=08 heading=01 ledC=11 led=0 fire=1 x=00 y=00 weapon=00 status=00 fb=0000 mem=80000000
+t=126000 op=1001 a=00 b=00 h=00 | speed=08 heading=01 ledC=11 led=0 fire=0 x=00 y=00 weapon=00 status=00 fb=0000 mem=90000000
+t=136000 op=1010 a=00 b=00 h=00 | speed=08 heading=01 ledC=11 led=0 fire=0 x=08 y=00 weapon=00 status=00 fb=0000 mem=a0000000
+t=146000 op=1011 a=00 b=00 h=00 | speed=08 heading=01 ledC=11 led=0 fire=0 x=00 y=00 weapon=00 status=00 fb=0800 mem=b0000000
+t=156000 op=0010 a=00 b=00 h=01 | speed=08 heading=10 ledC=11 led=0 fire=0 x=00 y=00 weapon=00 status=00 fb=0000 mem=20000020
+t=166000 op=1010 a=00 b=00 h=00 | speed=08 heading=10 ledC=11 led=0 fire=0 x=00 y=f8 weapon=00 status=00 fb=0000 mem=a0000000
+t=176000 op=1011 a=00 b=00 h=00 | speed=08 heading=10 ledC=11 led=0 fire=0 x=00 y=00 weapon=00 status=00 fb=00f8 mem=b0000000
+t=186000 op=0010 a=00 b=00 h=01 | speed=08 heading=11 ledC=11 led=0 fire=0 x=00 y=00 weapon=00 status=00 fb=0000 mem=20000003
+t=196000 op=1010 a=00 b=00 h=00 | speed=08 heading=11 ledC=11 led=0 fire=0 x=f8 y=00 weapon=00 status=00 fb=0000 mem=a0000000
+t=206000 op=0010 a=00 b=00 h=01 | speed=08 heading=00 ledC=11 led=0 fire=0 x=f8 y=00 weapon=00 status=00 fb=f800 mem=20000000
+t=216000 op=1010 a=00 b=00 h=00 | speed=08 heading=00 ledC=11 led=0 fire=0 x=f8 y=08 weapon=00 status=00 fb=f800 mem=a00003e0
+t=226000 op=1100 a=00 b=00 h=01 | speed=08 heading=00 ledC=11 led=0 fire=0 x=f8 y=08 weapon=01 status=00 fb=f808 mem=c00003e0
+t=236000 op=1100 a=00 b=00 h=10 | speed=08 heading=00 ledC=11 led=0 fire=0 x=f8 y=08 weapon=11 status=00 fb=f808 mem=c00007e0
+t=246000 op=1100 a=00 b=00 h=01 | speed=08 heading=00 ledC=11 led=0 fire=0 x=f8 y=08 weapon=00 status=00 fb=f808 mem=c0000fe0
+t=256000 op=1100 a=00 b=00 h=00 | speed=08 heading=00 ledC=11 led=0 fire=0 x=f8 y=08 weapon=00 status=00 fb=f808 mem=c00003e0
+t=266000 op=1111 a=00 b=00 h=00 | speed=08 heading=00 ledC=11 led=0 fire=0 x=f8 y=08 weapon=00 status=e1 fb=f808 mem=f00003e0
+  status-note: non-zero status indicates warning/error/incomplete behavior
+t=276000 op=0001 a=00 b=01 h=00 | speed=09 heading=00 ledC=11 led=0 fire=0 x=f8 y=08 weapon=00 status=00 fb=f808 mem=100013e0
+t=286000 op=0001 a=00 b=02 h=00 | speed=0b heading=00 ledC=11 led=0 fire=0 x=f8 y=08 weapon=00 status=00 fb=f808 mem=100023e0
+t=296000 op=0001 a=00 b=03 h=00 | speed=0e heading=00 ledC=11 led=0 fire=0 x=f8 y=08 weapon=00 status=00 fb=f808 mem=100033e0
+--- Robot Breadboard Testbench End ---
+phase3_verilog/robot_breadboard_tb.v:131: $finish called at 296000 (1ps)

@@ -1,10 +1,13 @@
 SIM_OUT=build/robot_tb.out
 VCD_OUT=build/robot_tb.vcd
 
-RTL_SOURCES=$(wildcard rtl/*.v)
-TB_SOURCES=tb/robot_breadboard_tb.v
+PHASE3_SRC_DIR=phase3_verilog
+TB_SOURCES=$(PHASE3_SRC_DIR)/robot_breadboard_tb.v
+RTL_SOURCES=$(filter-out $(TB_SOURCES),$(wildcard $(PHASE3_SRC_DIR)/*.v))
 
-COHORT?=Cohort
+SUBMISSION_DIR=submission
+SUBMISSION_ZIP=$(SUBMISSION_DIR)/Cohort0x01.Phase3.Verilog.zip
+SUBMISSION_OUT=$(SUBMISSION_DIR)/Cohort0x01.Phase3.output.txt
 
 .PHONY: all sim clean submission
 
@@ -16,12 +19,13 @@ sim:
 	vvp $(SIM_OUT)
 
 submission: sim
-	@mkdir -p submission
-	@vvp $(SIM_OUT) > submission/$(COHORT).Phase2.output.txt 2>&1
-	@cd rtl && zip -q ../submission/$(COHORT).Phase2.Verilog.zip *.v && cd ../tb && zip -q ../submission/$(COHORT).Phase2.Verilog.zip *.v && cd ..
+	@mkdir -p $(SUBMISSION_DIR)
+	@vvp $(SIM_OUT) > $(SUBMISSION_OUT) 2>&1
+	@rm -f $(SUBMISSION_ZIP)
+	@cd $(PHASE3_SRC_DIR) && zip -q ../$(SUBMISSION_ZIP) *.v
 	@echo "✓ Submission files created:"
-	@echo "  submission/$(COHORT).Phase2.Verilog.zip"
-	@echo "  submission/$(COHORT).Phase2.output.txt"
+	@echo "  $(SUBMISSION_ZIP)"
+	@echo "  $(SUBMISSION_OUT)"
 
 clean:
 	rm -rf build submission

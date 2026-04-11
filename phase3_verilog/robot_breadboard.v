@@ -18,11 +18,7 @@ module robot_breadboard (
     output wire [31:0] memory_reg32
 );
     wire [15:0] opcode_lines;
-    wire [3:0] mode_lines;
-
-    wire heading_bit0;
-    wire heading_bit1;
-    wire [1:0] heading_split_recombined;
+    wire [3:0] heading_dir_lines;
 
     wire [7:0] speed_q;
     wire [7:0] speed_d;
@@ -67,93 +63,63 @@ module robot_breadboard (
     wire [7:0] status_d;
 
     wire [7:0] speed_plus_one;
-    wire [7:0] speed_minus_one;
-    wire [7:0] one_neg;
+    wire [7:0] speed_operand;
     wire speed_cout_0;
-    wire speed_cout_1;
 
     wire [1:0] heading_plus_one;
     wire heading_cout;
 
     wire [1:0] led_color_sel0;
 
-    wire [7:0] x_neg_operand;
-    wire [7:0] y_neg_operand;
+    wire [7:0] speed_neg;
 
-    wire [7:0] x_add_operand;
-    wire [7:0] x_sub_operand;
-    wire [7:0] x_add_feedback;
-    wire [7:0] x_pair_low;
-    wire [7:0] x_pair_high;
-    wire [7:0] x_mode_selected;
+    wire [7:0] x_delta_fwd;
+    wire [7:0] x_delta_bwd;
+    wire [7:0] y_delta_fwd;
+    wire [7:0] y_delta_bwd;
+    wire [7:0] x_forward_next;
+    wire [7:0] x_backward_next;
+    wire [7:0] y_forward_next;
+    wire [7:0] y_backward_next;
     wire x_cout_0;
     wire x_cout_1;
-    wire x_cout_2;
-
-    wire [7:0] y_add_operand;
-    wire [7:0] y_sub_operand;
-    wire [7:0] y_add_feedback;
-    wire [7:0] y_pair_low;
-    wire [7:0] y_pair_high;
-    wire [7:0] y_mode_selected;
     wire y_cout_0;
     wire y_cout_1;
-    wire y_cout_2;
 
     wire reserved_opcode;
-    wire speed_dec_at_zero;
-    wire hold_mode_move;
 
     decoder4to16 u_opcode_decoder (
         .in(opcode),
         .out(opcode_lines)
     );
 
-    splitter2 u_heading_splitter (
-        .in(heading_in),
-        .bit0(heading_bit0),
-        .bit1(heading_bit1),
-        .out(heading_split_recombined)
+    decoder2to4 u_heading_decoder (
+        .in(heading_q),
+        .out(heading_dir_lines)
     );
 
-    decoder2to4 u_mode_decoder (
-        .in(heading_split_recombined),
-        .out(mode_lines)
+    mux2_1 #(.WIDTH(8)) u_speed_operand_mux (
+        .d0(data_in_a),
+        .d1(data_in_b),
+        .sel(opcode_lines[1]),
+        .y(speed_operand)
     );
 
-    twos_complement_n #(.WIDTH(8)) u_one_neg (
-        .in(8'h01),
-        .out(one_neg)
-    );
-
-    adder_n #(.WIDTH(8)) u_speed_inc (
+    adder_n #(.WIDTH(8)) u_speed_update (
         .a(speed_q),
-        .b(8'h01),
+        .b(speed_operand),
         .cin(1'b0),
         .sum(speed_plus_one),
         .cout(speed_cout_0)
     );
 
-    adder_n #(.WIDTH(8)) u_speed_dec (
-        .a(speed_q),
-        .b(one_neg),
-        .cin(1'b0),
-        .sum(speed_minus_one),
-        .cout(speed_cout_1)
-    );
-
-    mux2_1 #(.WIDTH(8)) u_speed_mux (
-        .d0(speed_plus_one),
-        .d1(speed_minus_one),
-        .sel(opcode_lines[1]),
-        .y(speed_d)
-    );
+    assign speed_d = speed_plus_one;
 
     assign speed_en = opcode_lines[0] | opcode_lines[1];
 
     adder_n #(.WIDTH(2)) u_heading_turn (
         .a(heading_q),
-        .b(2'b01),
+        .b(heading_in),
         .cin(1'b0),
         .sum(heading_plus_one),
         .cout(heading_cout)
@@ -184,115 +150,73 @@ module robot_breadboard (
     assign fire_d = {opcode_lines[8]};
     assign fire_en = opcode_lines[8] | opcode_lines[9];
 
-    twos_complement_n #(.WIDTH(8)) u_x_neg (
-        .in(data_in_a),
-        .out(x_neg_operand)
+    twos_complement_n #(.WIDTH(8)) u_speed_neg (
+        .in(speed_q),
+        .out(speed_neg)
     );
 
-    adder_n #(.WIDTH(8)) u_x_add_operand (
+    assign x_delta_fwd = ({8{heading_dir_lines[1]}} & speed_q) |
+                         ({8{heading_dir_lines[3]}} & speed_neg);
+    assign x_delta_bwd = ({8{heading_dir_lines[1]}} & speed_neg) |
+                         ({8{heading_dir_lines[3]}} & speed_q);
+    assign y_delta_fwd = ({8{heading_dir_lines[0]}} & speed_q) |
+                         ({8{heading_dir_lines[2]}} & speed_neg);
+    assign y_delta_bwd = ({8{heading_dir_lines[0]}} & speed_neg) |
+                         ({8{heading_dir_lines[2]}} & speed_q);
+
+    adder_n #(.WIDTH(8)) u_x_forward (
         .a(x_q),
-        .b(data_in_a),
+        .b(x_delta_fwd),
         .cin(1'b0),
-        .sum(x_add_operand),
+        .sum(x_forward_next),
         .cout(x_cout_0)
     );
 
-    adder_n #(.WIDTH(8)) u_x_sub_operand (
+    adder_n #(.WIDTH(8)) u_x_backward (
         .a(x_q),
-        .b(x_neg_operand),
+        .b(x_delta_bwd),
         .cin(1'b0),
-        .sum(x_sub_operand),
+        .sum(x_backward_next),
         .cout(x_cout_1)
     );
 
-    adder_n #(.WIDTH(8)) u_x_add_feedback (
-        .a(x_q),
-        .b(feedback_q[7:0]),
-        .cin(1'b0),
-        .sum(x_add_feedback),
-        .cout(x_cout_2)
+    mux2_1 #(.WIDTH(8)) u_x_move_mux (
+        .d0(x_forward_next),
+        .d1(x_backward_next),
+        .sel(opcode_lines[11]),
+        .y(x_d)
     );
 
-    mux2_1 #(.WIDTH(8)) u_x_pair_low (
-        .d0(x_add_operand),
-        .d1(x_sub_operand),
-        .sel(heading_bit0),
-        .y(x_pair_low)
-    );
+    assign x_en = opcode_lines[10] | opcode_lines[11];
 
-    mux2_1 #(.WIDTH(8)) u_x_pair_high (
-        .d0(x_add_feedback),
-        .d1(x_q),
-        .sel(heading_bit0),
-        .y(x_pair_high)
-    );
-
-    mux2_1 #(.WIDTH(8)) u_x_mode_mux (
-        .d0(x_pair_low),
-        .d1(x_pair_high),
-        .sel(heading_bit1),
-        .y(x_mode_selected)
-    );
-
-    assign x_d = x_mode_selected;
-    assign x_en = opcode_lines[10];
-
-    twos_complement_n #(.WIDTH(8)) u_y_neg (
-        .in(data_in_b),
-        .out(y_neg_operand)
-    );
-
-    adder_n #(.WIDTH(8)) u_y_add_operand (
+    adder_n #(.WIDTH(8)) u_y_forward (
         .a(y_q),
-        .b(data_in_b),
+        .b(y_delta_fwd),
         .cin(1'b0),
-        .sum(y_add_operand),
+        .sum(y_forward_next),
         .cout(y_cout_0)
     );
 
-    adder_n #(.WIDTH(8)) u_y_sub_operand (
+    adder_n #(.WIDTH(8)) u_y_backward (
         .a(y_q),
-        .b(y_neg_operand),
+        .b(y_delta_bwd),
         .cin(1'b0),
-        .sum(y_sub_operand),
+        .sum(y_backward_next),
         .cout(y_cout_1)
     );
 
-    adder_n #(.WIDTH(8)) u_y_add_feedback (
-        .a(y_q),
-        .b(feedback_q[15:8]),
-        .cin(1'b0),
-        .sum(y_add_feedback),
-        .cout(y_cout_2)
+    mux2_1 #(.WIDTH(8)) u_y_move_mux (
+        .d0(y_forward_next),
+        .d1(y_backward_next),
+        .sel(opcode_lines[11]),
+        .y(y_d)
     );
 
-    mux2_1 #(.WIDTH(8)) u_y_pair_low (
-        .d0(y_add_operand),
-        .d1(y_sub_operand),
-        .sel(heading_bit0),
-        .y(y_pair_low)
-    );
-
-    mux2_1 #(.WIDTH(8)) u_y_pair_high (
-        .d0(y_add_feedback),
-        .d1(y_q),
-        .sel(heading_bit0),
-        .y(y_pair_high)
-    );
-
-    mux2_1 #(.WIDTH(8)) u_y_mode_mux (
-        .d0(y_pair_low),
-        .d1(y_pair_high),
-        .sel(heading_bit1),
-        .y(y_mode_selected)
-    );
-
-    assign y_d = y_mode_selected;
-    assign y_en = opcode_lines[11];
+    assign y_en = opcode_lines[10] | opcode_lines[11];
 
     adder_n #(.WIDTH(2)) u_weapon_cycle (
         .a(weapon_q),
-        .b(2'b01),
+        .b(heading_in),
         .cin(1'b0),
         .sum(weapon_d),
         .cout(weapon_cout)
@@ -304,13 +228,8 @@ module robot_breadboard (
     assign mem32_d = {opcode, data_in_a, data_in_b, weapon_q, feedback_q[15:6]};
 
     assign reserved_opcode = opcode_lines[13] | opcode_lines[14] | opcode_lines[15];
-    assign speed_dec_at_zero = opcode_lines[1] & (speed_q == 8'h00);
-    assign hold_mode_move = (opcode_lines[10] | opcode_lines[11]) & mode_lines[3];
 
-    assign status_d = reserved_opcode ? 8'hE1 :
-                      speed_dec_at_zero ? 8'h21 :
-                      hold_mode_move ? 8'h31 :
-                      8'h00;
+    assign status_d = reserved_opcode ? 8'hE1 : 8'h00;
 
     reg_n #(.WIDTH(8)) u_speed_reg (
         .clk(clk),
