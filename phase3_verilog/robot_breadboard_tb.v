@@ -81,10 +81,10 @@ module robot_breadboard_tb;
         reset = 1'b0;
 
         // Basic command coverage with CircuitVerse-aligned datapaths:
-        // 0000: speed += data_in_a, 0001: speed += data_in_b.
+        // 0000: speed += data_in_a, 0001: speed -= 1.
         run_cmd(4'b0000, 8'h03, 8'h00, 2'b00); // speed += 03
         run_cmd(4'b0000, 8'h07, 8'h00, 2'b00); // speed += 07
-        run_cmd(4'b0001, 8'h00, 8'hFE, 2'b00); // speed += FE (effectively -2)
+        run_cmd(4'b0001, 8'h00, 8'h00, 2'b00); // speed -= 1
 
         // 0010: heading += heading_in (mod 4).
         run_cmd(4'b0010, 8'h00, 8'h00, 2'b01); // turn by +1 -> east
@@ -122,10 +122,10 @@ module robot_breadboard_tb;
         // Reserved opcodes to exercise status handling.
         run_cmd(4'b1111, 8'h00, 8'h00, 2'b00);
 
-        // Additional speed updates using data_in_b path.
-        run_cmd(4'b0001, 8'h00, 8'h01, 2'b00);
-        run_cmd(4'b0001, 8'h00, 8'h02, 2'b00);
-        run_cmd(4'b0001, 8'h00, 8'h03, 2'b00);
+        // Additional speed updates with decrement behavior.
+        run_cmd(4'b0001, 8'h00, 8'h00, 2'b00);
+        run_cmd(4'b0000, 8'h02, 8'h00, 2'b00);
+        run_cmd(4'b0001, 8'h00, 8'h00, 2'b00);
 
         $display("--- Robot Breadboard Testbench End ---");
         $finish;

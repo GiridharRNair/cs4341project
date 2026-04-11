@@ -2,16 +2,6 @@
 
 Structural Verilog implementation of a robot control breadboard. Simulates robot state (speed, heading, position, weapon type) via clocked opcode commands.
 
-## Project Overview
-
-This is a clocked circuit simulator where:
-- A testbench sends 4-bit opcodes to a breadboard module each clock cycle
-- The breadboard performs the corresponding action (speed change, LED control, movement, weapon selection)
-- Robot state registers (speed, heading, LED, position, weapon type) update synchronously
-- Current state + status codes are printed each cycle
-
-Design follows structural Verilog principles: all components (decoders, multiplexers, adders, registers from D flip-flops) are separate modules instantiated in the top-level breadboard.
-
 ## Setup
 
 Requirements: `iverilog` and `vvp` (Icarus Verilog)

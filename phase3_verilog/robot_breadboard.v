@@ -18,7 +18,7 @@ module robot_breadboard (
     output wire [31:0] memory_reg32
 );
     wire [15:0] opcode_lines;
-    wire [3:0] heading_dir_lines;
+    wire [3:0] move_dir_lines;
 
     wire [7:0] speed_q;
     wire [7:0] speed_d;
@@ -31,6 +31,9 @@ module robot_breadboard (
     wire [1:0] led_color_q;
     wire [1:0] led_color_d;
     wire led_color_en;
+    wire [1:0] led_color_raw;
+    wire led_color_bit0;
+    wire led_color_bit1;
 
     wire [0:0] led_signal_q;
     wire [0:0] led_signal_d;
@@ -73,18 +76,15 @@ module robot_breadboard (
 
     wire [7:0] speed_neg;
 
-    wire [7:0] x_delta_fwd;
-    wire [7:0] x_delta_bwd;
-    wire [7:0] y_delta_fwd;
-    wire [7:0] y_delta_bwd;
-    wire [7:0] x_forward_next;
-    wire [7:0] x_backward_next;
-    wire [7:0] y_forward_next;
-    wire [7:0] y_backward_next;
-    wire x_cout_0;
-    wire x_cout_1;
-    wire y_cout_0;
-    wire y_cout_1;
+    wire [7:0] x_move_operand;
+    wire [7:0] y_move_operand;
+    wire [7:0] x_move_next;
+    wire [7:0] y_move_next;
+    wire x_use_neg;
+    wire y_use_neg;
+    wire x_move_en;
+    wire y_move_en;
+    wire move_cmd;
 
     wire reserved_opcode;
 
@@ -93,14 +93,21 @@ module robot_breadboard (
         .out(opcode_lines)
     );
 
-    decoder2to4 u_heading_decoder (
-        .in(heading_q),
-        .out(heading_dir_lines)
+    demux1to4 u_move_demux (
+        .in(move_cmd),
+        .sel(heading_q),
+        .out(move_dir_lines)
+    );
+
+    or2 u_speed_command_or (
+        .a(opcode_lines[0]),
+        .b(opcode_lines[1]),
+        .y(speed_en)
     );
 
     mux2_1 #(.WIDTH(8)) u_speed_operand_mux (
         .d0(data_in_a),
-        .d1(data_in_b),
+        .d1(8'hFF),
         .sel(opcode_lines[1]),
         .y(speed_operand)
     );
@@ -114,8 +121,6 @@ module robot_breadboard (
     );
 
     assign speed_d = speed_plus_one;
-
-    assign speed_en = opcode_lines[0] | opcode_lines[1];
 
     adder_n #(.WIDTH(2)) u_heading_turn (
         .a(heading_q),
@@ -139,80 +144,132 @@ module robot_breadboard (
         .d0(led_color_sel0),
         .d1(2'b11),
         .sel(opcode_lines[5]),
-        .y(led_color_d)
+        .y(led_color_raw)
     );
 
-    assign led_color_en = opcode_lines[3] | opcode_lines[4] | opcode_lines[5];
+    splitter2 u_led_color_splitter (
+        .in(led_color_raw),
+        .bit0(led_color_bit0),
+        .bit1(led_color_bit1),
+        .out(led_color_d)
+    );
 
-    assign led_signal_d = {opcode_lines[6]};
-    assign led_signal_en = opcode_lines[6] | opcode_lines[7];
+    or4 u_led_color_enable_or (
+        .a(opcode_lines[3]),
+        .b(opcode_lines[4]),
+        .c(opcode_lines[5]),
+        .d(1'b0),
+        .y(led_color_en)
+    );
 
-    assign fire_d = {opcode_lines[8]};
-    assign fire_en = opcode_lines[8] | opcode_lines[9];
+    mux2_1 #(.WIDTH(1)) u_led_signal_mux (
+        .d0(1'b1),
+        .d1(1'b0),
+        .sel(opcode_lines[7]),
+        .y(led_signal_d)
+    );
+
+    or2 u_led_signal_enable_or (
+        .a(opcode_lines[6]),
+        .b(opcode_lines[7]),
+        .y(led_signal_en)
+    );
+
+    mux2_1 #(.WIDTH(1)) u_fire_mux (
+        .d0(1'b1),
+        .d1(1'b0),
+        .sel(opcode_lines[9]),
+        .y(fire_d)
+    );
+
+    or2 u_fire_enable_or (
+        .a(opcode_lines[8]),
+        .b(opcode_lines[9]),
+        .y(fire_en)
+    );
 
     twos_complement_n #(.WIDTH(8)) u_speed_neg (
         .in(speed_q),
         .out(speed_neg)
     );
 
-    assign x_delta_fwd = ({8{heading_dir_lines[1]}} & speed_q) |
-                         ({8{heading_dir_lines[3]}} & speed_neg);
-    assign x_delta_bwd = ({8{heading_dir_lines[1]}} & speed_neg) |
-                         ({8{heading_dir_lines[3]}} & speed_q);
-    assign y_delta_fwd = ({8{heading_dir_lines[0]}} & speed_q) |
-                         ({8{heading_dir_lines[2]}} & speed_neg);
-    assign y_delta_bwd = ({8{heading_dir_lines[0]}} & speed_neg) |
-                         ({8{heading_dir_lines[2]}} & speed_q);
-
-    adder_n #(.WIDTH(8)) u_x_forward (
-        .a(x_q),
-        .b(x_delta_fwd),
-        .cin(1'b0),
-        .sum(x_forward_next),
-        .cout(x_cout_0)
+    or2 u_move_command_or (
+        .a(opcode_lines[10]),
+        .b(opcode_lines[11]),
+        .y(move_cmd)
     );
 
-    adder_n #(.WIDTH(8)) u_x_backward (
+    xor2 u_x_signed_select (
+        .a(opcode_lines[11]),
+        .b(move_dir_lines[3]),
+        .y(x_use_neg)
+    );
+
+    xor2 u_y_signed_select (
+        .a(opcode_lines[11]),
+        .b(move_dir_lines[2]),
+        .y(y_use_neg)
+    );
+
+    or2 u_x_move_enable_or (
+        .a(move_dir_lines[1]),
+        .b(move_dir_lines[3]),
+        .y(x_move_en)
+    );
+
+    or2 u_y_move_enable_or (
+        .a(move_dir_lines[0]),
+        .b(move_dir_lines[2]),
+        .y(y_move_en)
+    );
+
+    mux2_1 #(.WIDTH(8)) u_x_operand_mux (
+        .d0(speed_q),
+        .d1(speed_neg),
+        .sel(x_use_neg),
+        .y(x_move_operand)
+    );
+
+    mux2_1 #(.WIDTH(8)) u_y_operand_mux (
+        .d0(speed_q),
+        .d1(speed_neg),
+        .sel(y_use_neg),
+        .y(y_move_operand)
+    );
+
+    adder_n #(.WIDTH(8)) u_x_move_adder (
         .a(x_q),
-        .b(x_delta_bwd),
+        .b(x_move_operand),
         .cin(1'b0),
-        .sum(x_backward_next),
-        .cout(x_cout_1)
+        .sum(x_move_next),
+        .cout()
     );
 
     mux2_1 #(.WIDTH(8)) u_x_move_mux (
-        .d0(x_forward_next),
-        .d1(x_backward_next),
-        .sel(opcode_lines[11]),
+        .d0(x_q),
+        .d1(x_move_next),
+        .sel(x_move_en),
         .y(x_d)
     );
 
-    assign x_en = opcode_lines[10] | opcode_lines[11];
+    assign x_en = x_move_en;
 
-    adder_n #(.WIDTH(8)) u_y_forward (
+    adder_n #(.WIDTH(8)) u_y_move_adder (
         .a(y_q),
-        .b(y_delta_fwd),
+        .b(y_move_operand),
         .cin(1'b0),
-        .sum(y_forward_next),
-        .cout(y_cout_0)
-    );
-
-    adder_n #(.WIDTH(8)) u_y_backward (
-        .a(y_q),
-        .b(y_delta_bwd),
-        .cin(1'b0),
-        .sum(y_backward_next),
-        .cout(y_cout_1)
+        .sum(y_move_next),
+        .cout()
     );
 
     mux2_1 #(.WIDTH(8)) u_y_move_mux (
-        .d0(y_forward_next),
-        .d1(y_backward_next),
-        .sel(opcode_lines[11]),
+        .d0(y_q),
+        .d1(y_move_next),
+        .sel(y_move_en),
         .y(y_d)
     );
 
-    assign y_en = opcode_lines[10] | opcode_lines[11];
+    assign y_en = y_move_en;
 
     adder_n #(.WIDTH(2)) u_weapon_cycle (
         .a(weapon_q),
@@ -227,7 +284,13 @@ module robot_breadboard (
     assign feedback_d = {x_q, y_q};
     assign mem32_d = {opcode, data_in_a, data_in_b, weapon_q, feedback_q[15:6]};
 
-    assign reserved_opcode = opcode_lines[13] | opcode_lines[14] | opcode_lines[15];
+    or4 u_reserved_opcode_or (
+        .a(opcode_lines[13]),
+        .b(opcode_lines[14]),
+        .c(opcode_lines[15]),
+        .d(1'b0),
+        .y(reserved_opcode)
+    );
 
     assign status_d = reserved_opcode ? 8'hE1 : 8'h00;
 
