@@ -39,8 +39,8 @@ This generates:
 
 | Opcode | Operation | Effect |
 |--------|-----------|--------|
-| 0000 | Increase speed | speed += data_in_a |
-| 0001 | Speed update path B | speed += data_in_b |
+| 0000 | Increase speed | speed += 1 |
+| 0001 | Decrease speed | speed -= 1 |
 | 0010 | Turn command | heading += heading_in (wraps mod 4) |
 | 0011 | LED blue | led_color = 01 |
 | 0100 | LED green | led_color = 10 |
@@ -67,15 +67,15 @@ When executing opcode 1010 (forward) or 1011 (backward), movement is derived fro
 
 Each line shows one clock cycle:
 ```
-t=<time> op=<opcode> a=<data_A> b=<data_B> h=<heading> | speed=<val> heading=<val> ledC=<color> led=<0/1> fire=<0/1> x=<val> y=<val> weapon=<type> status=<code> fb=<16-bit> mem=<32-bit>
+t=<time> op=<opcode> h=<heading> | speed=<val> heading=<val> ledC=<color> led=<0/1> fire=<0/1> x=<val> y=<val> weapon=<type> status=<code> fb=<16-bit> mem=<32-bit>
 ```
 
 Key fields:
-- `op`, `a`, `b`, `h` — inputs sent this cycle
+- `op`, `h` — inputs sent this cycle
 - `speed`, `heading`, `led*`, `fire`, `x`, `y`, `weapon` — robot state outputs
 - `status` — error/warning code (00 = OK)
 - `fb` — 16-bit feedback loop register (holds X:Y from prior cycle)
-- `mem` — 32-bit memory register (snapshot of opcode + inputs + weapon state)
+- `mem` — 32-bit memory register (snapshot of opcode + control/state fields)
 
 ## Status Codes
 

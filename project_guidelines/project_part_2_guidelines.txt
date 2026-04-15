@@ -1,0 +1,238 @@
+Project, Part 2
+CS 4341 Spring 2026 
+Due March 13 , 11:59 pm
+Due: March 27th, 11:59 pm
+Objective
+
+Instructions: 
+This assignment is a Cohort Assignment. While everyone may work together and share information, each member of the cohort must submit their own copy of the project.
+Products: 
+To that end, certain phases must be completed. This phase consists of  
+	•	Cohort Update, 5 points 
+	•	Project Description Update, 5 points
+	•	Bookwork, 30 points
+	•	System Design, 30 points
+	•	Program, 30 points
+	•	Citations, Required
+
+Notes on Grading
+This project phase is graded based on the following results
+	•	Documents: All documents are submitted. If a document is not submitted or is unreadable, then full points are deducted. If the documents are confusing, badly spelled, or badly drawn, 2 points will be deducted for each time the grader is confused. 
+	•	Bookwork is a sample problem for the cohort to work on and is practice for the exams. If the cohort assigns just one person with the bookwork, rather than discussing it as a group, and the grades diminish, that is the responsibility of the cohort. 
+	•	Programming: The program portion must be correct, and the instructions followed. Students in the past have turned in working code…that did not follow the directions. Full points will be deducted if the code is incorrect, even if the output is correct.
+	•	Citations: If the cohort uses software to solve problems, which includes current artificial intelligence, then that software must be cited. Other software includes Logisim, Circuitverse, and Digital I/O. A cohort using software to check their work is not wrong. 
+	•	Example Software Citations:
+	•	OpenAI. 2023. ChatGPT (Mar 7 version) [Large language model]. https://chat.openai.com/chat
+	•	CircuitVerse. 2026. Online Digital Logic Circuit Simulator. https://circuitverse.org/ 
+	•	
+Cohort and Project Update: (10 points) 
+For the term project, students are to join a cohort of one or more students to work on the project.
+	•	Confirm the Cohort name and Cohort members
+Include the name of the cohort and a list of its members. This will be an updated version of the cohort description from part 1 of the project. 
+For the cohort’s name and description:
+	•	New changes to the cohort’s name and descriptions must be marked in bold blue. 
+	•	Removed material of the cohort’s name and description must be marked in  bold strikethrough. 
+	•	Unchanged material should be left in regular black font.
+	•	It is possible that nothing has changed.
+	•	It is possible that everything has changed. 
+For the list of cohort members:
+	•	Any member added to the cohort must be marked in bold blue. 
+	•	Any member removed from the cohort must be marked in bold strikethrough. 
+	•	Any unchanged member should be left in regular black font. 
+	•	It is possible that nothing has changed. 
+	•	It is possible that everything has changed.
+Confirm the Project Description
+Since part 1 of the project, the description of the project may have changed. It is important that the description in this part of part 2 will match the System Design in the later section. 
+	•	Any details added to the project description must be marked in bold blue. 
+	•	Any details removed from the cohort must be marked as a bold strikethrough. 
+	•	Any unchanged details should be left in regular black font. 
+	•	It is possible that nothing has changed. 
+	•	It is possible that everything has changed.
+What to turn in
+Turn in a single PDF <CohortName>. Phase2Update.pdf with the following information:
+	•	The cohort membership information 
+	•	The update of the project description. 
+
+Bookwork (30 points)
+Work out and solve the following problems. These are NOT programming problems. These are practice problems.
+Multiplexer Control Problem.
+Given the following circuit, complete the truth table. (5 points)
+
+
+A
+B
+OPCODE
+S
+b
+0011
+0011
+011
+
+
+0011
+0111
+100
+
+
+0101
+1101
+001
+
+
+1001
+1011
+111
+
+
+0001
+1001
+111
+
+
+
+
+State Machine Problem (15 points)
+Given:
+
+
+Notation:
+	•	Each state has a 2-bit label CS1CS0.
+	•	Each transition starts at CS1CS0 , and then points to the matching NS1NS0
+	•	Each transition has a multibit label. { T1T0, T1T0}/ Out2Out1Out0
+	•	Inside the {} is a set of one or more 2-bit transition labels T1T0.
+	•	After the / is a set of a 3-bit output label Out2Out1Out0.
+Find:
+	•	Convert the State Machine into the Truth Table.
+	•	The four 1-bit inputs are CS1, CS0, T1, T0
+	•	The two 1-bit next states are NS1, NS0,
+	•	The three 1-bit outputs are Out2, Out1, Out0
+	•	Solve for the five normalized equations for NS1, NS0, Out2, Out1, Out0.
+	•	Draw a sequential circuit
+	•	use two D-Flip Flops, one for CS1 and one for CS0
+	•	use two inputs, one for T1 and one for T0
+	•	use three outputs for Out2, Out1, Out0
+	•	use the feedback of the current state with the input transitions to draw the normalized equations NS1 and NS0 going into the D ports of CS1 and CS0
+	•	use the output of the current state with the input transitions to draw the normalized equations for the outputs Out2, Out1, Out0.
+	•	Do not forget to include the clock and reset.
+
+Solve the Selector Logic Problem (TBA points)
+Given:
+
+The circuit is a counter circuit with a register and is controlled by the Selector Logic. The Selector Logic has 4 1-bit inputs and 1 4-bit outputs. The Selector Logic has the following behavior:
+	•	If the Reset(i3) is True, then the MUX will go to channel 3. The Reset overrides all other commands.
+	•	If the Pause(i2) is True, then the MUX will go to channel 0. The Pause overrides all other commands except Reset.
+	•	If the register is greater than 179 (i1), then the MUX will go to channel 3.
+	•	If the register is equal to 179(i0), then the MUX will go to channel 3.
+	•	If all inputs are False, then the circuit runs as a counter.
+
+Find:
+	•	Stop and read the system design of the circuit and look at the circuit. Then stop and re-read the system design again. If you are going “Too Long, didn’t read” go back a third time. Answer the question: What does this circuit do?
+	•	Create a truth table that shows the behavior of the Selector Logic. The inputs are i3, i2, i1, i0. The outputs are s3, s2, s1, s0.
+	•	Solve the equations for the selector logic. 
+
+What to turn in
+Turn in a PDF <CohortName>.Phase2.Bookwork.pdf with the following information:
+
+Create a System Design Document
+For the next portion of the project, the cohort is to create a System Design document. The system design document consists of the following parts:
+	•	A circuit diagram showing the major components
+	•	A Parts List of the components used
+	•	An Input List, which shows the lines of information coming into the system. 
+	•	An Output List that shows the lines of information going out of the system
+	•	An Interface List, which shows the lines of information going between components
+	•	An Opcode Table, a set of commands that make the system change. 
+Component Diagram
+The Verilog program will be made of different modules that are connected in the breadboard module. Create a component diagram that shows the lines coming into the breadboard from the testbench, the various components (adder, subtractor, multiply, and, or, not, arbiter, registers, multiplexors, decoders, and other components). The lines that go between the components (interfaces) and the lines leaving the breadboard (output to the testbench)
+Example:
+
+Parts List
+ Create a list of the parts for the project that are visible in the component diagram. Each component should have a name, the type of component, and a description of what it is.
+Example:
+	•	Color Mux, a 4x3 Multiplexer, a multiplexer that handles the choice of blade color.
+	•	Color Register, a 3-bit register, a register that stores the 3-bit value of a blade color.
+
+Input List
+Commands and data going from the testbench module to the breadboard module are the inputs to the system. Make a list of these input parameters and write a one sentence description of each input. Include the number of bits.
+Example:
+	•	Blue, 3-bits, represents the color blue.
+	•	Clock, 1-bit, represents the clock-signal for the register
+	•	Color Opcode, 2-bits, chooses the color
+	•	Green, a 3-bits, represents the color green
+	•	Red, a 3-bits, represents the color red
+	•	Reset, a 1-bit, low means register operates. high sets the register to 0.
+Output List
+Signals and data returning to the testbench module from the breadboard are the outputs of the system. Make a list of these output parameters and write a one sentence description of each output. Include the number of bits.
+Example:
+	•	Current Color, a 3-bit integer, represents the current color of the lightsaber
+Interface List
+Create an interface list by going through the local variables declared in the breadboard module. Each of these interfaces connect two parts. For the list, name the interface, the parts they connect to, and a one-sentence description of the interface.
+Example: 
+	•	Color Mux b, 3-bits, connects Color Mux to Color Register.
+
+Opcode Table
+Create a table that lists out the commands that the system is going to perform. Each of these commands will consist of a binary code of ones and zeros called an opcode. Opcodes can be s a single set of selection values, multiple sets of selection values, or mapped to a set of selection values.
+
+Example:
+Binary Value
+Operation
+Description
+00
+No Operation
+Keep the color the same
+01
+Set Red
+Set the blade color to Red
+10
+Set Green
+Set the blade color to Green
+11
+Set Blue
+Set the blade color to Blue
+
+How Will This Be Graded.
+When it comes time to grade the system design, the system design will be compared with the project description. When it comes time to grade the current code, the current code will be compared with the System Design. The code may not be complete. The last step of the System Design is to mark the amount that has been completed in the code in part 5 of this project phase. All completed components in the System Design should be highlighted in yellow. 
+What to Turn In
+Turn in a single pdf file named <Cohort>.Phase2.SystemDesign.pdf
+
+Implement Project Code (30 points)
+
+Description
+This style of coding is a sprint towards the finish line (Agile). The code at this point will run and create an output but is not expected to be 100% complete at the end of Phase 2. The code must be 100% complete by Phase 3. 
+Construction
+The construction of the code should parallel the testbench and breadboard system done in Phase 1. This time, instead of having a for-loop generating a truth table, the testbench will be a set of commands sent to the bread board working with a clock. Commands against a clock is a program.
+What Is Expected
+The testbench should include a clock signal, and a series of opcodes, which are sent from the testbench to the breadboard. The breadboard should perform the actions required and return an output. The output would include any current data and a status. The data could be the value of a calculation, the color stored in memory, or a set of error codes. 
+The breadboard should be made of components. Instead of gate equations in part 1 of the project, the breadboard should contain the parts listed in the System Design. The input list will be the input parameters of the breadboard module. The outputs will be the output parameters of the breadboard module. The interfaces will be the local variables of the breadboard module. 
+The components on the breadboard will be additional modules. If an AND gate is to process two 32-bit binary numbers, the AND gate should be a separate module, instantiated in the breadboard instead of being coded directly into the breadboard. Decoders, Multiplexers, Adders, Subtractors, Multipliers, Dividers, Modulus, the Logic Operations would all be separate modules in the code and instantiated in the breadboard.
+Memory elements, the registers, will be made of D Flip-Flops (DFF). The DFF sample code as well as other examples will be available on eLearning in the Project Part 2 folder. The registers are the component that will require the clock signal from the testbench.
+The results of the activation of the components should be returned as parameters back to the testbench, and the testbench will output the data to screen.
+Structural vs. Behavioral
+Sample codes with structural Verilog will be made available to the students for use in constructing components. In these components, there will be no for loops or if statements or other procedural programming used as shortcuts. Specifically, decoders, adders, subtractors, and multiplexers should be structural. The breadboard, by its nature, is structural.
+Modules ought to be behavioral would be operations such as modulus and division. The testbench can also be considered to be behavioral. If the Verilog code looks more like C++ and Java then the code is behavioral.
+If a new, original component designed by the cohort to do a single action would be larger than the entire program, then it should be made behavioral, and comments included in the module to say why.
+
+Output
+Depending on the system being built the output will be quite different. Yet some output will be needed.
+Regardless of what design the cohort has chosen, the following should be made visible.
+	•	The current opcode is being loaded.
+	•	The current input values are being processed.
+	•	The current output values that are being returned.
+	•	Any error codes or status codes used to safeguard the program.
+	•	Any test messages to indicate a part of the program is still incomplete.
+Grading
+Since every cohort could have a different project, the current code will be compared to what was marked completed in the System Design.
+
+COMPLEXITY
+
+The projects must be as complex as an ALU. An ALU has a 32-bit memory register, a 16-bit feedback loop, and sixteen op-codes representing 16 operations. Math and logic operations are represented by having additional Verilog modules, which also include error codes and status messages to be routed to the output.  
+
+Examples:
+	•	If nothing is complete, then -30 points
+	•	If the system is partially complete, but does not generate output, -20 points
+	•	If the system is partially complete, and generates output, but doesn’t match the system design. -15 points. 
+	•	If the system is fully complete, it generates output, and matches the system design, and the program is super-simple like turning on a light bulb, 30 points will be deducted. The system must be as complex as the ALU.
+	•	If the system is partially complete, and generates output, and matches the system design, and is at least as complex as an ALU, full points.
+	•	If the system is fully complete, and generates correct output, and matches the system design, and is at least as complex as an ALU, full points.
+What To Turn In. 
+	•	Turn in the current Verilog code. If it is multiple *.v files, feel free to create a zip file. It should be named <Cohort>.Phase2.v or <Cohort>.Phase2.Verilog.zip
+	•	Turn in a text document of the output, <Cohort>.Phase2.output.txt

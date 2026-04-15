@@ -2,8 +2,6 @@ module robot_breadboard (
     input wire clk,
     input wire reset,
     input wire [3:0] opcode,
-    input wire [7:0] data_in_a,
-    input wire [7:0] data_in_b,
     input wire [1:0] heading_in,
     output wire [7:0] speed,
     output wire [1:0] heading,
@@ -106,7 +104,7 @@ module robot_breadboard (
     );
 
     mux2_1 #(.WIDTH(8)) u_speed_operand_mux (
-        .d0(data_in_a),
+        .d0(8'h01),
         .d1(8'hFF),
         .sel(opcode_lines[1]),
         .y(speed_operand)
@@ -282,7 +280,7 @@ module robot_breadboard (
     assign weapon_en = opcode_lines[12];
 
     assign feedback_d = {x_q, y_q};
-    assign mem32_d = {opcode, data_in_a, data_in_b, weapon_q, feedback_q[15:6]};
+    assign mem32_d = {opcode, heading_in, weapon_q, status_q, feedback_q};
 
     or4 u_reserved_opcode_or (
         .a(opcode_lines[13]),

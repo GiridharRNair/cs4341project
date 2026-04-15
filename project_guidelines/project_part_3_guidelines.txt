@@ -1,0 +1,111 @@
+Project, Part 3
+CS 4341 Spring 2026
+Due: Friday, April 17th, 11:59 pm
+Instructions:
+This assignment is a Cohort Assignment. While everyone may work together and share information,
+each member of the cohort must submit their own copy of the project.
+Products:
+To that end, certain phases must be completed. This phase consists of
+• Quiz Work, 30 points
+• Cohort Final, 5 points
+• Project Description Final, 5 points
+• System Design Final, 10 points
+• Program, 35 points
+• Output, 15 points
+• Citations, Required
+Notes on Grading
+This project phase is graded based on the following results
+• Quiz Work is a set of sample problem for the cohort to work on and is practice for the exams. To
+increase participation on the sample problems, these will be done as a series of short quizzes
+during the in-class Cohort Time.
+• Documents: All documents are submitted. If a document is not submitted or is unreadable, then full
+points are deducted. If the documents are confusing, badly spelled, or badly drawn, 2 points will be
+deducted for each time the grader is confused.
+• Programming: The program portion must be correct, and the instructions followed. Students in the past
+have turned in working code…that did not follow the directions. Full points will be deducted if the
+code is incorrect, even if the output is correct.
+• Use of AI
+o Personal Note: AI systems are not guaranteed to generate the correct answer.
+o AI may be used but will be considered just another software package, and AI systems
+must be included in the citations.
+o If the cohort turns in the incorrect answer, that is the responsibility of the cohort, not the
+AI. You cannot gain points back by saying the AI was responsible.
+• Citations: If the cohort uses software to solve problems, which includes current artificial intelligence,
+then that software must be cited. Other software includes Logisim, Circuitverse, and Digital I/O. A
+cohort using software to check their work is not wrong.
+• Example Software Citations:
+o OpenAI. 2023. ChatGPT (Mar 7 version) [Large language model]. https://chat.openai.com/chat
+o CircuitVerse. 2026. Online Digital Logic Circuit Simulator. https://circuitverse.org/ 
+Quiz Work (30 points)
+Between now and the end of the semester, some of the cohort times will be replaced by in-class,
+group assignments. This material will be drawn from Chapter 7 Memory, Chapter 8 RTL, and
+possibly Chapter 15 Timing Constraints and Chapter 21 Pipelining.
+Cohort Final (5 points)
+For the term project, students are to join a cohort of one or more students to work on the project.
+Confirm the Cohort name and Cohort members
+Include the name of the cohort and a list of its members. This will be an updated version of the cohort
+description from part 2 of the project. Since this is the final form, there are no blue font or strikethrough
+font, only the final form of the project.
+This document must include.
+• The date of the document.
+• The cohort’s name and description:
+• A list of cohort members.
+What to turn in:
+Turn in a single PDF <CohortName>.Charter.Final.pdf containing the final form of the cohort.:
+Project Description Final ( 5 points)
+Confirm the Project Description
+Describe the project that is being turned in by the Cohort. The project description needs to be at least one
+paragraph long describing what the cohort has built for this semester. This description might not have
+changed over the course of the semester. Since this is the final form, there are no blue font or strikethrough
+font.
+What to turn in
+Turn in a single PDF <CohortName>.ProjectDescription.Final.pdf containing the final project
+description.
+System Design Final (10 points)
+The System Design document needs to be finalized for part 3. Since this is the final form, there are no blue
+font or strikethrough font.
+The system design document consists of the following sections.
+• Component Diagram: A circuit diagram showing the major components in the breadboard module.
+• Parts List: A list of the modules instantiated in the breadboard module.
+• An Input List, which shows the lines of information coming into the breadboard module.
+• An Output List that shows the lines of information going out of the breadboard module.
+• An Interface List, which shows the lines of information going between components, represented
+by local variables in the breadboard module.
+• An Opcode Table, a set of commands that make the system change. These are a list of the input
+variables to the breadboard module and includes a description of what each opcode makes the
+system perform.
+Each section should include at the minimum of a one-sentence description of a component or line in
+the system. This System Design Final will be used to check the code against the project description.
+Every time something does not match, it will be a 2-point deduction. 
+Programming (35 points)
+The Programming portion of the program is the second sprint of this project. The program must be a
+testbench with the stimulus (the main of the program), have a breadboard module that matches the
+component diagram from the system design, and all other components, (gates, counters, mathematics,
+controllers, multiplexors, decoders, encoders, comparators) must be modules instantiated in the
+breadboard module.
+Modules that are considered overcomplex (example, Long Division) may be done with behavioral
+coding, such as loops and if-statements. Modules that are addition, subtraction, logic gates,
+multiplexers, decoders, and standard components should be done as structural codes, utilizing gates
+and concatenations and arrays to perform the functions.
+COMPLEXITY
+The projects must be as complex as an ALU. An ALU has a 32-bit memory register, a 16-bit
+feedback loop, and sixteen op-codes representing 16 operations. Math and logic operations are
+represented by having additional Verilog modules, which also include error codes and status
+messages to be routed to the output.
+Memory systems should be registers made of D Flip-Flops (DFF). An ALU would have a single
+accumulator register, but have 12 to 16 opcodes. A lightsaber controller would have a register for the
+blade color, blade length, number of blades, additional registers for other blades. (“Hey, six bladed
+light saber! 24 registers!”) but could have fewer opcodes.
+Most importantly, the breadboard module must match the Component Diagram in the System Design.
+The components in the breadboard module must be their own modules.
+Output (15 points)
+The stimulus in the testbench must demonstrate the opcodes and their components. An ALU would
+have to show the ability to solve multiple math equations by accepting a series of instructions and clock
+pulses over the course of the stimulus. Perhaps demonstrating the area of a circle, the surface area of
+a cone, and the volume of a sphere. A lightsaber would need to be able to switch each blade on, adjust
+the length of each blade, and adjust the color of each blade, and be able to switch the blades off. A
+single traffic light is not much of a problem, but a stimulus and breadboard that had four traffic lights
+guarding an intersection would be at least 3 states (red, yellow, green) for four cases. (north, south, east
+west). A rover or drone would have to receive instructions to start movement, travel some distance, and
+perform a task. The opcodes in the System Design would be checked against the commands used in
+the output. 

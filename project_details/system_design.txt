@@ -5,52 +5,38 @@ CircuitVerse Project Link: https://circuitverse.org/users/413178/projects/robot-
 
 Parts List
 
-Speed Register, 8-bit D flip-flop, keeps the robot speed state persistent between commands.
-Heading Register, 2-bit D flip-flop, keeps the robot direction state used by turn and move commands.
-LED Color Register, 2-bit D flip-flop, stores the current LED color selection.
-LED Signal Register, 1-bit D flip-flop, stores whether the LED is on or off.
-Fire Bullets Register, 1-bit D flip-flop, stores whether firing mode is enabled.
-X Position Register, 8-bit D flip-flop, keeps the robot X coordinated across movement steps.
-Y Position Register, 8-bit D flip-flop, keeps the robot Y coordinated across movement steps.
-Weapon Type Register, 2-bit D flip-flop, stores the currently selected weapon mode.
-Speed Operand Mux, 8-bit 2:1 multiplexer, selects which external data input participates in speed updates.
-Heading Update Mux, 2-bit 2:1 multiplexer, selects whether the heading keeps its value or takes a turn update.
-LED Color Update Mux, 2-bit 2:1 multiplexer, selects whether LED color holds or changes to a commanded color.
-LED Signal Update Mux, 1-bit 2:1 multiplexer, selects whether LED on/off state holds or changes.
-Fire Signal Update Mux, 1-bit 2:1 multiplexer, selects whether fire-enable state holds or changes.
-Y Signed-Operand Mux, 8-bit 2:1 multiplexer, selects forward or reverse movement operand for Y updates.
-X Signed-Operand Mux, 8-bit 2:1 multiplexer, selects forward or reverse movement operand for X updates.
-X Position Update Mux, 8-bit 2:1 multiplexer, selects whether X position holds or applies movement.
-Y Position Update Mux, 8-bit 2:1 multiplexer, selects whether Y position holds or applies movement.
-Weapon Type Update Mux, 2-bit 2:1 multiplexer, selects whether weapon type holds or advances to the next mode.
-Speed Update Mux, 8-bit 2:1 multiplexer, selects whether speed holds or applies increment/decrement.
-Weapon Cycle Adder, 2-bit adder, computes the next weapon type during cycle-weapon commands.
-X Position Adder, 8-bit adder, computes X coordinate updates during movement commands.
-Y Position Adder, 8-bit adder, computes Y coordinate updates during movement commands.
-Heading Turn Adder, 2-bit adder, computes heading updates during turn commands.
-Speed Update Adder, 8-bit adder, computes speed increments and decrements.
-Y Reverse Operand Generator, 8-bit two's complement block, generates reverse-direction speed value for Y movement handling.
-X Reverse Operand Generator, 8-bit two's complement block, generates reverse-direction speed value for X movement handling.
-Opcode Decoder, 4-to-16 decoder, converts each opcode into a dedicated command enable.
-Operation Demultiplexer, 1-to-4 demultiplexer, routes movement control to the heading-selected branch.
-Speed Command Combiner, 2-input OR gate, combines increase/decrease speed command conditions.
-LED Blue/Red Command Combiner, 2-input OR gate, combines LED blue and red command conditions.
-LED Green/Red Command Combiner, 2-input OR gate, combines LED green and red command conditions.
-LED Color Update Enable Combiner, 4-input OR gate, generates the overall LED color update enable.
-LED On/Off Command Combiner, 2-input OR gate, combines LED on and LED off command conditions.
-Fire Start/Stop Command Combiner, 2-input OR gate, combines fire start and fire stop command conditions.
-Y Movement Enable Combiner, 2-input OR gate, enables Y coordinate updates for the applicable movement directions.
-X Movement Enable Combiner, 2-input OR gate, enables X coordinate updates for the applicable movement directions.
-Move Command Combiner, 2-input OR gate, combines move-forward and move-backward command conditions.
-Y Signed-Select XOR, 2-input XOR gate, determines whether Y movement uses forward or reverse operand polarity.
-X Signed-Select XOR, 2-input XOR gate, determines whether X movement uses forward or reverse operand polarity.
-Splitter, 2-bit splitter/combiner, assembles/distributes LED color control bits as a 2-bit value.
+u_speed_reg (reg_n WIDTH=8), speed state register built from dff_async cells.
+u_heading_reg (reg_n WIDTH=2), heading state register used by turn and movement logic.
+u_led_color_reg (reg_n WIDTH=2), LED color state register.
+u_led_signal_reg (reg_n WIDTH=1), LED on/off state register.
+u_fire_reg (reg_n WIDTH=1), fire-enable state register.
+u_x_reg (reg_n WIDTH=8), X position state register.
+u_y_reg (reg_n WIDTH=8), Y position state register.
+u_weapon_reg (reg_n WIDTH=2), weapon type state register.
+u_feedback_reg (reg_n WIDTH=16), feedback-loop register.
+u_memory32_reg (reg_n WIDTH=32), 32-bit memory snapshot register.
+u_status_reg (reg_n WIDTH=8), status/error-code register.
+u_opcode_decoder (decoder4to16), decodes opcode into one-hot command lines.
+u_move_demux (demux1to4), routes move command by current heading.
+u_speed_operand_mux (mux2_1 WIDTH=8), selects speed add operand (8'h01 for increment or 8'hFF for decrement).
+u_speed_update (adder_n WIDTH=8), computes next speed.
+u_heading_turn (adder_n WIDTH=2), computes heading update (mod 4).
+u_led_color_mux0 and u_led_color_mux1 (mux2_1 WIDTH=2), generate commanded LED color.
+u_led_color_splitter (splitter2), formats LED color control bits.
+u_led_signal_mux (mux2_1 WIDTH=1), selects LED on/off command value.
+u_fire_mux (mux2_1 WIDTH=1), selects fire on/off command value.
+u_speed_neg (twos_complement_n WIDTH=8), generates negative speed for reverse movement.
+u_x_signed_select and u_y_signed_select (xor2), choose forward/reverse operand polarity.
+u_x_operand_mux and u_y_operand_mux (mux2_1 WIDTH=8), select movement operand sign.
+u_x_move_adder and u_y_move_adder (adder_n WIDTH=8), compute next X/Y values.
+u_x_move_mux and u_y_move_mux (mux2_1 WIDTH=8), apply move-or-hold selection.
+u_weapon_cycle (adder_n WIDTH=2), computes next weapon type (mod 4).
+u_speed_command_or, u_led_signal_enable_or, u_fire_enable_or, u_x_move_enable_or, u_y_move_enable_or, u_move_command_or (or2), command and enable combiners.
+u_led_color_enable_or and u_reserved_opcode_or (or4), multi-source command combiners.
 
 Input List
 
 Opcode Input, 4-bits, selects the operation to execute in the current cycle.
-Data Input A, 8-bits, provides operand data used by speed/X arithmetic paths.
-Data Input B, 8-bits, provides operand data used by Y arithmetic and related datapath operations.
 Heading Input, 2-bits, provides directional control mode for movement/heading updates.
 Weapon Control Input, 2-bits, provides control data for weapon-type sequencing logic.
 Clock, 1-bit, defines the active edge when state registers latch next-state values.
@@ -103,10 +89,10 @@ Operation
 Description
 0000
 Increase speed
-Increase speed, increments the speed register value by one.
+Increase speed, increments the speed register by one.
 0001
 Decrease speed
-Decrease speed, decrements the speed register value by one.
+Decrease speed, subtracts one from the speed register.
 0010
 Turn 90 degrees
 Turn 90 degrees, rotate heading by one step (modulo 4).
