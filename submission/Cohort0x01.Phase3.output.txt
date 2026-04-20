@@ -1,36 +1,36 @@
 --- Robot Breadboard Testbench Start ---
-Time=26000 | Opcode=0000 | Speed=2 | Heading=00 | LED-Color=00 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=0000 | Memory-Snapshot=04000000
-Time=36000 | Opcode=0000 | Speed=3 | Heading=00 | LED-Color=00 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=0000 | Memory-Snapshot=04000000
-Time=46000 | Opcode=0001 | Speed=2 | Heading=00 | LED-Color=00 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=0000 | Memory-Snapshot=14000000
-Time=56000 | Opcode=0010 | Speed=2 | Heading=01 | LED-Color=00 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=0000 | Memory-Snapshot=24000000
-Time=66000 | Opcode=0011 | Speed=2 | Heading=01 | LED-Color=01 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=0000 | Memory-Snapshot=34000000
-Time=76000 | Opcode=0100 | Speed=2 | Heading=01 | LED-Color=10 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=0000 | Memory-Snapshot=44000000
-Time=86000 | Opcode=0101 | Speed=2 | Heading=01 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=0000 | Memory-Snapshot=54000000
-Time=96000 | Opcode=0110 | Speed=2 | Heading=01 | LED-Color=11 | LED-On=1 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=0000 | Memory-Snapshot=64000000
-Time=106000 | Opcode=0111 | Speed=2 | Heading=01 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=0000 | Memory-Snapshot=74000000
-Time=116000 | Opcode=1000 | Speed=2 | Heading=01 | LED-Color=11 | LED-On=0 | Fire-On=1 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=0000 | Memory-Snapshot=84000000
-Time=126000 | Opcode=1001 | Speed=2 | Heading=01 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=0000 | Memory-Snapshot=94000000
-Time=136000 | Opcode=1010 | Speed=2 | Heading=01 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=02 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=0000 | Memory-Snapshot=a4000000
-Time=146000 | Opcode=1011 | Speed=2 | Heading=01 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=0200 | Memory-Snapshot=b4000000
-Time=156000 | Opcode=0010 | Speed=2 | Heading=10 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=0000 | Memory-Snapshot=24000200
-Time=166000 | Opcode=1010 | Speed=2 | Heading=10 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=fe | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=0000 | Memory-Snapshot=a4000000
-Time=176000 | Opcode=1011 | Speed=2 | Heading=10 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=00fe | Memory-Snapshot=b4000000
-Time=186000 | Opcode=0010 | Speed=2 | Heading=11 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=0000 | Memory-Snapshot=240000fe
-Time=196000 | Opcode=1010 | Speed=2 | Heading=11 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=0000 | Memory-Snapshot=a4000000
-Time=206000 | Opcode=0010 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=fe00 | Memory-Snapshot=24000000
-Time=216000 | Opcode=1010 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=fe00 | Memory-Snapshot=a400fe00
-Time=226000 | Opcode=1100 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=01 | Status-Code=00 | Feedback-Loop=fe02 | Memory-Snapshot=c400fe00
-Time=236000 | Opcode=1100 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=10 | Status-Code=00 | Feedback-Loop=fe02 | Memory-Snapshot=c500fe02
-Time=246000 | Opcode=1100 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=11 | Status-Code=00 | Feedback-Loop=fe02 | Memory-Snapshot=c600fe02
-Time=256000 | Opcode=1100 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=fe02 | Memory-Snapshot=c700fe02
-Time=266000 | Opcode=1101 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=00 | Status-Code=e1 | Feedback-Loop=fe02 | Memory-Snapshot=d400fe02
+Time=26000 | Opcode=0000 | Speed=2 | Heading=00 | LED-Color=00 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=04000000
+Time=36000 | Opcode=0000 | Speed=3 | Heading=00 | LED-Color=00 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=04000000
+Time=46000 | Opcode=0001 | Speed=2 | Heading=00 | LED-Color=00 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=14000000
+Time=56000 | Opcode=0010 | Speed=2 | Heading=01 | LED-Color=00 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=24000000
+Time=66000 | Opcode=0011 | Speed=2 | Heading=01 | LED-Color=01 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=34000000
+Time=76000 | Opcode=0100 | Speed=2 | Heading=01 | LED-Color=10 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=44000000
+Time=86000 | Opcode=0101 | Speed=2 | Heading=01 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=54000000
+Time=96000 | Opcode=0110 | Speed=2 | Heading=01 | LED-Color=11 | LED-On=1 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=64000000
+Time=106000 | Opcode=0111 | Speed=2 | Heading=01 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=74000000
+Time=116000 | Opcode=1000 | Speed=2 | Heading=01 | LED-Color=11 | LED-On=0 | Fire-On=1 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=84000000
+Time=126000 | Opcode=1001 | Speed=2 | Heading=01 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=94000000
+Time=136000 | Opcode=1010 | Speed=2 | Heading=01 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=02 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=a4000000
+Time=146000 | Opcode=1011 | Speed=2 | Heading=01 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=b4000200
+Time=156000 | Opcode=0010 | Speed=2 | Heading=10 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=24000000
+Time=166000 | Opcode=1010 | Speed=2 | Heading=10 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=fe | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=a4000000
+Time=176000 | Opcode=1011 | Speed=2 | Heading=10 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=b40000fe
+Time=186000 | Opcode=0010 | Speed=2 | Heading=11 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=00 | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=24000000
+Time=196000 | Opcode=1010 | Speed=2 | Heading=11 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=a4000000
+Time=206000 | Opcode=0010 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=00 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=2400fe00
+Time=216000 | Opcode=1010 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=a400fe00
+Time=226000 | Opcode=1100 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=01 | Status-Code=00 | Memory-Snapshot=c400fe02
+Time=236000 | Opcode=1100 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=10 | Status-Code=00 | Memory-Snapshot=c500fe02
+Time=246000 | Opcode=1100 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=11 | Status-Code=00 | Memory-Snapshot=c600fe02
+Time=256000 | Opcode=1100 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=c700fe02
+Time=266000 | Opcode=1101 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=00 | Status-Code=e1 | Memory-Snapshot=d400fe02
   Status Warning: Reserved opcode detected -- non-zero Status-Code indicates a warning or error condition
-Time=276000 | Opcode=1110 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=00 | Status-Code=e1 | Feedback-Loop=fe02 | Memory-Snapshot=e4e1fe02
+Time=276000 | Opcode=1110 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=00 | Status-Code=e1 | Memory-Snapshot=e4e1fe02
   Status Warning: Reserved opcode detected -- non-zero Status-Code indicates a warning or error condition
-Time=286000 | Opcode=1111 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=00 | Status-Code=e1 | Feedback-Loop=fe02 | Memory-Snapshot=f4e1fe02
+Time=286000 | Opcode=1111 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=00 | Status-Code=e1 | Memory-Snapshot=f4e1fe02
   Status Warning: Reserved opcode detected -- non-zero Status-Code indicates a warning or error condition
-Time=296000 | Opcode=0001 | Speed=1 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=fe02 | Memory-Snapshot=14e1fe02
-Time=306000 | Opcode=0000 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=fe02 | Memory-Snapshot=0400fe02
-Time=316000 | Opcode=0001 | Speed=1 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=00 | Status-Code=00 | Feedback-Loop=fe02 | Memory-Snapshot=1400fe02
+Time=296000 | Opcode=0001 | Speed=1 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=14e1fe02
+Time=306000 | Opcode=0000 | Speed=2 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=0400fe02
+Time=316000 | Opcode=0001 | Speed=1 | Heading=00 | LED-Color=11 | LED-On=0 | Fire-On=0 | X-Position=fe | Y-Position=02 | Weapon-Type=00 | Status-Code=00 | Memory-Snapshot=1400fe02
 --- Robot Breadboard Testbench End ---
-project_code/robot_breadboard_tb.v:115: $finish called at 316000 (1ps)
+project_code/robot_breadboard_tb.v:113: $finish called at 316000 (1ps)

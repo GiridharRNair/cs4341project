@@ -14,7 +14,6 @@ module robot_breadboard_tb;
     wire [7:0] y_position;
     wire [1:0] weapon_type;
     wire [7:0] status_code;
-    wire [15:0] feedback_loop;
     wire [31:0] memory_snapshot;
 
     robot_breadboard dut (
@@ -30,7 +29,6 @@ module robot_breadboard_tb;
         .y_position(y_position),
         .weapon_type(weapon_type),
         .status_code(status_code),
-        .feedback_loop(feedback_loop),
         .memory_snapshot(memory_snapshot)
     );
 
@@ -45,10 +43,10 @@ module robot_breadboard_tb;
             @(posedge clk);
             #1;
 
-            $display("Time=%0t | Opcode=%b | Speed=%0d | Heading=%b | LED-Color=%b | LED-On=%b | Fire-On=%b | X-Position=%02h | Y-Position=%02h | Weapon-Type=%b | Status-Code=%02h | Feedback-Loop=%04h | Memory-Snapshot=%08h",
+            $display("Time=%0t | Opcode=%b | Speed=%0d | Heading=%b | LED-Color=%b | LED-On=%b | Fire-On=%b | X-Position=%02h | Y-Position=%02h | Weapon-Type=%b | Status-Code=%02h | Memory-Snapshot=%08h",
                 $time, opcode,
                 speed, heading, led_color, led_signal, fire_signal,
-                x_position, y_position, weapon_type, status_code, feedback_loop, memory_snapshot);
+                x_position, y_position, weapon_type, status_code, memory_snapshot);
 
             if (status_code != 8'h00) begin
                 $display("  Status Warning: Reserved opcode detected -- non-zero Status-Code indicates a warning or error condition");

@@ -14,7 +14,6 @@
 - X Position Register, an 8-bit register, stores the current X coordinate of the robot on the grid.
 - Y Position Register, an 8-bit register, stores the current Y coordinate of the robot on the grid.
 - Weapon Type Register, a 2-bit register, stores the current weapon mode selected by the robot.
-- Feedback Register, a 16-bit register, stores the combined X and Y position as a 16-bit feedback value.
 - Memory Snapshot Register, a 32-bit register, stores a snapshot of the opcode and all state values.
 - Status Register, an 8-bit register, stores the current status or error code (0xE1 = reserved opcode warning).
 - Opcode Decoder, a 4-to-16 decoder, decodes the 4-bit opcode input into 16 individual one-hot command lines.
@@ -58,8 +57,7 @@
 - Y Position, 8-bits, the current Y coordinate of the robot on the grid.
 - Weapon Type, 2-bits, the current weapon mode stored in the Weapon Type Register.
 - Status Code, 8-bits, the status or error code output (0x00 = normal operation, 0xE1 = reserved opcode warning).
-- Feedback Loop, 16-bits, a 16-bit value combining the current X Position (upper 8 bits) and Y Position (lower 8 bits).
-- Memory Snapshot, 32-bits, a 32-bit snapshot capturing the opcode, the fixed heading increment, weapon type, status code, and feedback values from the previous clock cycle.
+- Memory Snapshot, 32-bits, a 32-bit snapshot capturing the opcode, heading increment, weapon type, status code, X position, and Y position from the previous clock cycle.
 
 ## Interface List
 
@@ -73,8 +71,7 @@
 - X Position Signals, 8-bits, connects the X Position Register to the X Move Adder and X Move Mux, carrying the current X position, next X position, and enable signal.
 - Y Position Signals, 8-bits, connects the Y Position Register to the Y Move Adder and Y Move Mux, carrying the current Y position, next Y position, and enable signal.
 - Weapon Signals, 2-bits, connects the Weapon Type Register to the Weapon Cycle Adder, carrying the current weapon type, next weapon type, and enable signal.
-- Feedback Signals, 16-bits, connects the X Position Register and Y Position Register outputs to the Feedback Register input.
-- Memory Snapshot Signals, 32-bits, connects the opcode input, heading input, weapon type, status, and feedback values to the Memory Snapshot Register input.
+- Memory Snapshot Signals, 32-bits, connects the opcode, heading increment, weapon type, status code, X position, and Y position directly to the Memory Snapshot Register input.
 - Status Signals, 8-bits, connects the Reserved Opcode OR gate result to the Status Register, carrying the current status code and the next status value.
 - Speed Arithmetic Signals, 8-bits, connects the Speed Operand Mux output to the Speed Update Adder and the Speed Negation Block output to the X and Y Operand Muxes.
 - Heading Arithmetic Signals, 2-bits, connects the Heading Update Adder output to the Heading Register input.

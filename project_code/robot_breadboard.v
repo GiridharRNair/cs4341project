@@ -11,7 +11,6 @@ module robot_breadboard (
     output wire [7:0] y_position,
     output wire [1:0] weapon_type,
     output wire [7:0] status_code,
-    output wire [15:0] feedback_loop,
     output wire [31:0] memory_snapshot
 );
     wire [1:0] heading_input = 2'b01;
@@ -54,9 +53,6 @@ module robot_breadboard (
     wire [1:0] weapon_d;
     wire weapon_en;
     wire weapon_cout;
-
-    wire [15:0] feedback_q;
-    wire [15:0] feedback_d;
 
     wire [31:0] memory_snapshot_q;
     wire [31:0] memory_snapshot_d;
@@ -280,8 +276,7 @@ module robot_breadboard (
 
     assign weapon_en = opcode_lines[12];
 
-    assign feedback_d = {x_q, y_q};
-    assign memory_snapshot_d = {opcode, heading_input, weapon_q, status_code_q, feedback_q};
+    assign memory_snapshot_d = {opcode, heading_input, weapon_q, status_code_q, x_q, y_q};
 
     or4 Reserved_Opcode_Or (
         .a(opcode_lines[13]),
@@ -357,14 +352,6 @@ module robot_breadboard (
         .q(weapon_q)
     );
 
-    reg_n #(.WIDTH(16)) Feedback_Register (
-        .clk(clk),
-        .reset(reset),
-        .en(1'b1),
-        .d(feedback_d),
-        .q(feedback_q)
-    );
-
     reg_n #(.WIDTH(32)) Memory_Snapshot_Register (
         .clk(clk),
         .reset(reset),
@@ -390,6 +377,5 @@ module robot_breadboard (
     assign y_position = y_q;
     assign weapon_type = weapon_q;
     assign status_code = status_code_q;
-    assign feedback_loop = feedback_q;
     assign memory_snapshot = memory_snapshot_q;
 endmodule
