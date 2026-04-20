@@ -43,6 +43,9 @@
 - Clock, 1-bit, the clock signal used to latch all state registers on the rising edge.
 - Reset, 1-bit, an asynchronous reset that clears all registers to zero when asserted high.
 - Opcode, 4-bits, the command input that selects which robot action to perform during the current clock cycle.
+- Speed Increment, a fixed 8-bit constant (value 0x01), wired directly into the Speed Operand Mux as the +1 operand for increasing speed.
+- Speed Decrement, a fixed 8-bit constant (value 0xFF, which is -1 in two's complement), wired directly into the Speed Operand Mux as the -1 operand for decreasing speed.
+- Heading Increment, a fixed 2-bit constant (value 01), wired directly into the Heading Update Adder and the Weapon Cycle Adder as the fixed +1 increment.
 
 ## Output List
 
@@ -62,7 +65,6 @@
 
 - Opcode Lines, 16-bits, connects the Opcode Decoder to all command enable logic throughout the breadboard.
 - Movement Direction Lines, 4-bits, connects the Movement Demultiplexer to the X and Y movement enable and sign logic.
-- Heading Increment, a fixed 2-bit constant (value 01), wired directly into the Heading Update Adder and the Weapon Cycle Adder as the fixed +1 increment value.
 - Speed State Signals, 8-bits, connects the Speed Register to the Speed Operand Mux and Speed Update Adder, carrying the current speed, next speed, and enable signal.
 - Heading State Signals, 2-bits, connects the Heading Register to the Heading Update Adder, carrying the current heading, next heading, and enable signal.
 - LED Color State Signals, 2-bits, connects the LED Color Register to the LED Color Select Muxes, carrying the current color, next color, and enable signal.
