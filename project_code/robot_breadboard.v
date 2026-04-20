@@ -2,21 +2,22 @@ module robot_breadboard (
     input wire clk,
     input wire reset,
     input wire [3:0] opcode,
-    input wire [1:0] heading_in,
     output wire [7:0] speed,
     output wire [1:0] heading,
     output wire [1:0] led_color,
     output wire led_signal,
-    output wire fire_bullets_signal,
+    output wire fire_signal,
     output wire [7:0] x_position,
     output wire [7:0] y_position,
     output wire [1:0] weapon_type,
-    output wire [7:0] status,
+    output wire [7:0] status_code,
     output wire [15:0] feedback_loop,
-    output wire [31:0] memory_reg32
+    output wire [31:0] memory_snapshot
 );
+    wire [1:0] heading_input = 2'b01;
+
     wire [15:0] opcode_lines;
-    wire [3:0] move_dir_lines;
+    wire [3:0] movement_direction_lines;
 
     wire [7:0] speed_q;
     wire [7:0] speed_d;
@@ -37,9 +38,9 @@ module robot_breadboard (
     wire [0:0] led_signal_d;
     wire led_signal_en;
 
-    wire [0:0] fire_q;
-    wire [0:0] fire_d;
-    wire fire_en;
+    wire [0:0] fire_signal_q;
+    wire [0:0] fire_signal_d;
+    wire fire_signal_en;
 
     wire [7:0] x_q;
     wire [7:0] x_d;
@@ -57,102 +58,102 @@ module robot_breadboard (
     wire [15:0] feedback_q;
     wire [15:0] feedback_d;
 
-    wire [31:0] mem32_q;
-    wire [31:0] mem32_d;
+    wire [31:0] memory_snapshot_q;
+    wire [31:0] memory_snapshot_d;
 
-    wire [7:0] status_q;
-    wire [7:0] status_d;
+    wire [7:0] status_code_q;
+    wire [7:0] status_code_d;
 
-    wire [7:0] speed_plus_one;
+    wire [7:0] speed_next;
     wire [7:0] speed_operand;
     wire speed_cout_0;
 
-    wire [1:0] heading_plus_one;
+    wire [1:0] heading_next;
     wire heading_cout;
 
     wire [1:0] led_color_sel0;
 
-    wire [7:0] speed_neg;
+    wire [7:0] speed_negated;
 
-    wire [7:0] x_move_operand;
-    wire [7:0] y_move_operand;
-    wire [7:0] x_move_next;
-    wire [7:0] y_move_next;
-    wire x_use_neg;
-    wire y_use_neg;
-    wire x_move_en;
-    wire y_move_en;
-    wire move_cmd;
+    wire [7:0] x_movement_operand;
+    wire [7:0] y_movement_operand;
+    wire [7:0] x_position_next;
+    wire [7:0] y_position_next;
+    wire x_sign_select;
+    wire y_sign_select;
+    wire x_movement_enable;
+    wire y_movement_enable;
+    wire move_command;
 
-    wire reserved_opcode;
+    wire reserved_opcode_signal;
 
-    decoder4to16 u_opcode_decoder (
+    decoder4to16 Opcode_Decoder (
         .in(opcode),
         .out(opcode_lines)
     );
 
-    demux1to4 u_move_demux (
-        .in(move_cmd),
+    demux1to4 Movement_Demultiplexer (
+        .in(move_command),
         .sel(heading_q),
-        .out(move_dir_lines)
+        .out(movement_direction_lines)
     );
 
-    or2 u_speed_command_or (
+    or2 Speed_Command_Or (
         .a(opcode_lines[0]),
         .b(opcode_lines[1]),
         .y(speed_en)
     );
 
-    mux2_1 #(.WIDTH(8)) u_speed_operand_mux (
+    mux2_1 #(.WIDTH(8)) Speed_Operand_Mux (
         .d0(8'h01),
         .d1(8'hFF),
         .sel(opcode_lines[1]),
         .y(speed_operand)
     );
 
-    adder_n #(.WIDTH(8)) u_speed_update (
+    adder_n #(.WIDTH(8)) Speed_Update_Adder (
         .a(speed_q),
         .b(speed_operand),
         .cin(1'b0),
-        .sum(speed_plus_one),
+        .sum(speed_next),
         .cout(speed_cout_0)
     );
 
-    assign speed_d = speed_plus_one;
+    assign speed_d = speed_next;
 
-    adder_n #(.WIDTH(2)) u_heading_turn (
+    adder_n #(.WIDTH(2)) Heading_Update_Adder (
         .a(heading_q),
-        .b(heading_in),
+        .b(heading_input),
         .cin(1'b0),
-        .sum(heading_plus_one),
+        .sum(heading_next),
         .cout(heading_cout)
     );
 
-    assign heading_d = heading_plus_one;
+    assign heading_d = heading_next;
     assign heading_en = opcode_lines[2];
 
-    mux2_1 #(.WIDTH(2)) u_led_color_mux0 (
+    mux2_1 #(.WIDTH(2)) LED_Color_Mux0 (
         .d0(2'b01),
         .d1(2'b10),
         .sel(opcode_lines[4]),
         .y(led_color_sel0)
     );
 
-    mux2_1 #(.WIDTH(2)) u_led_color_mux1 (
+    mux2_1 #(.WIDTH(2)) LED_Color_Mux1 (
         .d0(led_color_sel0),
         .d1(2'b11),
         .sel(opcode_lines[5]),
         .y(led_color_raw)
     );
 
-    splitter2 u_led_color_splitter (
+    splitter2 LED_Color_Splitter (
         .in(led_color_raw),
         .bit0(led_color_bit0),
         .bit1(led_color_bit1),
         .out(led_color_d)
     );
 
-    or4 u_led_color_enable_or (
+    or4 LED_Color_Enable_Or (
         .a(opcode_lines[3]),
         .b(opcode_lines[4]),
         .c(opcode_lines[5]),
@@ -160,118 +161,118 @@ module robot_breadboard (
         .y(led_color_en)
     );
 
-    mux2_1 #(.WIDTH(1)) u_led_signal_mux (
+    mux2_1 #(.WIDTH(1)) LED_Signal_Mux (
         .d0(1'b1),
         .d1(1'b0),
         .sel(opcode_lines[7]),
         .y(led_signal_d)
     );
 
-    or2 u_led_signal_enable_or (
+    or2 LED_Signal_Enable_Or (
         .a(opcode_lines[6]),
         .b(opcode_lines[7]),
         .y(led_signal_en)
     );
 
-    mux2_1 #(.WIDTH(1)) u_fire_mux (
+    mux2_1 #(.WIDTH(1)) Fire_Mux (
         .d0(1'b1),
         .d1(1'b0),
         .sel(opcode_lines[9]),
-        .y(fire_d)
+        .y(fire_signal_d)
     );
 
-    or2 u_fire_enable_or (
+    or2 Fire_Enable_Or (
         .a(opcode_lines[8]),
         .b(opcode_lines[9]),
-        .y(fire_en)
+        .y(fire_signal_en)
     );
 
-    twos_complement_n #(.WIDTH(8)) u_speed_neg (
+    twos_complement_n #(.WIDTH(8)) Speed_Negation_Block (
         .in(speed_q),
-        .out(speed_neg)
+        .out(speed_negated)
     );
 
-    or2 u_move_command_or (
+    or2 Move_Command_Or (
         .a(opcode_lines[10]),
         .b(opcode_lines[11]),
-        .y(move_cmd)
+        .y(move_command)
     );
 
-    xor2 u_x_signed_select (
+    xor2 X_Sign_Selector (
         .a(opcode_lines[11]),
-        .b(move_dir_lines[3]),
-        .y(x_use_neg)
+        .b(movement_direction_lines[3]),
+        .y(x_sign_select)
     );
 
-    xor2 u_y_signed_select (
+    xor2 Y_Sign_Selector (
         .a(opcode_lines[11]),
-        .b(move_dir_lines[2]),
-        .y(y_use_neg)
+        .b(movement_direction_lines[2]),
+        .y(y_sign_select)
     );
 
-    or2 u_x_move_enable_or (
-        .a(move_dir_lines[1]),
-        .b(move_dir_lines[3]),
-        .y(x_move_en)
+    or2 X_Movement_Enable_Or (
+        .a(movement_direction_lines[1]),
+        .b(movement_direction_lines[3]),
+        .y(x_movement_enable)
     );
 
-    or2 u_y_move_enable_or (
-        .a(move_dir_lines[0]),
-        .b(move_dir_lines[2]),
-        .y(y_move_en)
+    or2 Y_Movement_Enable_Or (
+        .a(movement_direction_lines[0]),
+        .b(movement_direction_lines[2]),
+        .y(y_movement_enable)
     );
 
-    mux2_1 #(.WIDTH(8)) u_x_operand_mux (
+    mux2_1 #(.WIDTH(8)) X_Operand_Mux (
         .d0(speed_q),
-        .d1(speed_neg),
-        .sel(x_use_neg),
-        .y(x_move_operand)
+        .d1(speed_negated),
+        .sel(x_sign_select),
+        .y(x_movement_operand)
     );
 
-    mux2_1 #(.WIDTH(8)) u_y_operand_mux (
+    mux2_1 #(.WIDTH(8)) Y_Operand_Mux (
         .d0(speed_q),
-        .d1(speed_neg),
-        .sel(y_use_neg),
-        .y(y_move_operand)
+        .d1(speed_negated),
+        .sel(y_sign_select),
+        .y(y_movement_operand)
     );
 
-    adder_n #(.WIDTH(8)) u_x_move_adder (
+    adder_n #(.WIDTH(8)) X_Move_Adder (
         .a(x_q),
-        .b(x_move_operand),
+        .b(x_movement_operand),
         .cin(1'b0),
-        .sum(x_move_next),
+        .sum(x_position_next),
         .cout()
     );
 
-    mux2_1 #(.WIDTH(8)) u_x_move_mux (
+    mux2_1 #(.WIDTH(8)) X_Move_Mux (
         .d0(x_q),
-        .d1(x_move_next),
-        .sel(x_move_en),
+        .d1(x_position_next),
+        .sel(x_movement_enable),
         .y(x_d)
     );
 
-    assign x_en = x_move_en;
+    assign x_en = x_movement_enable;
 
-    adder_n #(.WIDTH(8)) u_y_move_adder (
+    adder_n #(.WIDTH(8)) Y_Move_Adder (
         .a(y_q),
-        .b(y_move_operand),
+        .b(y_movement_operand),
         .cin(1'b0),
-        .sum(y_move_next),
+        .sum(y_position_next),
         .cout()
     );
 
-    mux2_1 #(.WIDTH(8)) u_y_move_mux (
+    mux2_1 #(.WIDTH(8)) Y_Move_Mux (
         .d0(y_q),
-        .d1(y_move_next),
-        .sel(y_move_en),
+        .d1(y_position_next),
+        .sel(y_movement_enable),
         .y(y_d)
     );
 
-    assign y_en = y_move_en;
+    assign y_en = y_movement_enable;
 
-    adder_n #(.WIDTH(2)) u_weapon_cycle (
+    adder_n #(.WIDTH(2)) Weapon_Cycle_Adder (
         .a(weapon_q),
-        .b(heading_in),
+        .b(heading_input),
         .cin(1'b0),
         .sum(weapon_d),
         .cout(weapon_cout)
@@ -280,19 +281,19 @@ module robot_breadboard (
     assign weapon_en = opcode_lines[12];
 
     assign feedback_d = {x_q, y_q};
-    assign mem32_d = {opcode, heading_in, weapon_q, status_q, feedback_q};
+    assign memory_snapshot_d = {opcode, heading_input, weapon_q, status_code_q, feedback_q};
 
-    or4 u_reserved_opcode_or (
+    or4 Reserved_Opcode_Or (
         .a(opcode_lines[13]),
         .b(opcode_lines[14]),
         .c(opcode_lines[15]),
         .d(1'b0),
-        .y(reserved_opcode)
+        .y(reserved_opcode_signal)
     );
 
-    assign status_d = reserved_opcode ? 8'hE1 : 8'h00;
+    assign status_code_d = reserved_opcode_signal ? 8'hE1 : 8'h00;
 
-    reg_n #(.WIDTH(8)) u_speed_reg (
+    reg_n #(.WIDTH(8)) Speed_Register (
         .clk(clk),
         .reset(reset),
         .en(speed_en),
@@ -300,7 +301,7 @@ module robot_breadboard (
         .q(speed_q)
     );
 
-    reg_n #(.WIDTH(2)) u_heading_reg (
+    reg_n #(.WIDTH(2)) Heading_Register (
         .clk(clk),
         .reset(reset),
         .en(heading_en),
@@ -308,7 +309,7 @@ module robot_breadboard (
         .q(heading_q)
     );
 
-    reg_n #(.WIDTH(2)) u_led_color_reg (
+    reg_n #(.WIDTH(2)) LED_Color_Register (
         .clk(clk),
         .reset(reset),
         .en(led_color_en),
@@ -316,7 +317,7 @@ module robot_breadboard (
         .q(led_color_q)
     );
 
-    reg_n #(.WIDTH(1)) u_led_signal_reg (
+    reg_n #(.WIDTH(1)) LED_Signal_Register (
         .clk(clk),
         .reset(reset),
         .en(led_signal_en),
@@ -324,15 +325,15 @@ module robot_breadboard (
         .q(led_signal_q)
     );
 
-    reg_n #(.WIDTH(1)) u_fire_reg (
+    reg_n #(.WIDTH(1)) Fire_Bullets_Register (
         .clk(clk),
         .reset(reset),
-        .en(fire_en),
-        .d(fire_d),
-        .q(fire_q)
+        .en(fire_signal_en),
+        .d(fire_signal_d),
+        .q(fire_signal_q)
     );
 
-    reg_n #(.WIDTH(8)) u_x_reg (
+    reg_n #(.WIDTH(8)) X_Position_Register (
         .clk(clk),
         .reset(reset),
         .en(x_en),
@@ -340,7 +341,7 @@ module robot_breadboard (
         .q(x_q)
     );
 
-    reg_n #(.WIDTH(8)) u_y_reg (
+    reg_n #(.WIDTH(8)) Y_Position_Register (
         .clk(clk),
         .reset(reset),
         .en(y_en),
@@ -348,7 +349,7 @@ module robot_breadboard (
         .q(y_q)
     );
 
-    reg_n #(.WIDTH(2)) u_weapon_reg (
+    reg_n #(.WIDTH(2)) Weapon_Type_Register (
         .clk(clk),
         .reset(reset),
         .en(weapon_en),
@@ -356,7 +357,7 @@ module robot_breadboard (
         .q(weapon_q)
     );
 
-    reg_n #(.WIDTH(16)) u_feedback_reg (
+    reg_n #(.WIDTH(16)) Feedback_Register (
         .clk(clk),
         .reset(reset),
         .en(1'b1),
@@ -364,31 +365,31 @@ module robot_breadboard (
         .q(feedback_q)
     );
 
-    reg_n #(.WIDTH(32)) u_memory32_reg (
+    reg_n #(.WIDTH(32)) Memory_Snapshot_Register (
         .clk(clk),
         .reset(reset),
         .en(1'b1),
-        .d(mem32_d),
-        .q(mem32_q)
+        .d(memory_snapshot_d),
+        .q(memory_snapshot_q)
     );
 
-    reg_n #(.WIDTH(8)) u_status_reg (
+    reg_n #(.WIDTH(8)) Status_Register (
         .clk(clk),
         .reset(reset),
         .en(1'b1),
-        .d(status_d),
-        .q(status_q)
+        .d(status_code_d),
+        .q(status_code_q)
     );
 
     assign speed = speed_q;
     assign heading = heading_q;
     assign led_color = led_color_q;
     assign led_signal = led_signal_q[0];
-    assign fire_bullets_signal = fire_q[0];
+    assign fire_signal = fire_signal_q[0];
     assign x_position = x_q;
     assign y_position = y_q;
     assign weapon_type = weapon_q;
-    assign status = status_q;
+    assign status_code = status_code_q;
     assign feedback_loop = feedback_q;
-    assign memory_reg32 = mem32_q;
+    assign memory_snapshot = memory_snapshot_q;
 endmodule

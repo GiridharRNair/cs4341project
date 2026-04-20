@@ -4,58 +4,54 @@ module robot_breadboard_tb;
     reg clk;
     reg reset;
     reg [3:0] opcode;
-    reg [1:0] heading_in;
 
     wire [7:0] speed;
     wire [1:0] heading;
     wire [1:0] led_color;
     wire led_signal;
-    wire fire_bullets_signal;
+    wire fire_signal;
     wire [7:0] x_position;
     wire [7:0] y_position;
     wire [1:0] weapon_type;
-    wire [7:0] status;
+    wire [7:0] status_code;
     wire [15:0] feedback_loop;
-    wire [31:0] memory_reg32;
+    wire [31:0] memory_snapshot;
 
     robot_breadboard dut (
         .clk(clk),
         .reset(reset),
         .opcode(opcode),
-        .heading_in(heading_in),
         .speed(speed),
         .heading(heading),
         .led_color(led_color),
         .led_signal(led_signal),
-        .fire_bullets_signal(fire_bullets_signal),
+        .fire_signal(fire_signal),
         .x_position(x_position),
         .y_position(y_position),
         .weapon_type(weapon_type),
-        .status(status),
+        .status_code(status_code),
         .feedback_loop(feedback_loop),
-        .memory_reg32(memory_reg32)
+        .memory_snapshot(memory_snapshot)
     );
 
     always #5 clk = ~clk;
 
     task run_cmd;
         input [3:0] op;
-        input [1:0] h;
         begin
             @(negedge clk);
             opcode = op;
-            heading_in = h;
 
             @(posedge clk);
             #1;
 
-            $display("t=%0t op=%b h=%b | speed=%02h heading=%b ledC=%b led=%b fire=%b x=%02h y=%02h weapon=%b status=%02h fb=%04h mem=%08h",
-                $time, opcode, heading_in,
-                speed, heading, led_color, led_signal, fire_bullets_signal,
-                x_position, y_position, weapon_type, status, feedback_loop, memory_reg32);
+            $display("Time=%0t | Opcode=%b | Speed=%0d | Heading=%b | LED-Color=%b | LED-On=%b | Fire-On=%b | X-Position=%02h | Y-Position=%02h | Weapon-Type=%b | Status-Code=%02h | Feedback-Loop=%04h | Memory-Snapshot=%08h",
+                $time, opcode,
+                speed, heading, led_color, led_signal, fire_signal,
+                x_position, y_position, weapon_type, status_code, feedback_loop, memory_snapshot);
 
-            if (status != 8'h00) begin
-                $display("  status-note: non-zero status indicates warning/error/incomplete behavior");
+            if (status_code != 8'h00) begin
+                $display("  Status Warning: Reserved opcode detected -- non-zero Status-Code indicates a warning or error condition");
             end
         end
     endtask
@@ -64,60 +60,56 @@ module robot_breadboard_tb;
         clk = 1'b0;
         reset = 1'b1;
         opcode = 4'b0000;
-        heading_in = 2'b00;
 
         $display("--- Robot Breadboard Testbench Start ---");
         #12;
         reset = 1'b0;
 
-        // Basic command coverage with CircuitVerse-aligned datapaths:
         // 0000: speed += 1, 0001: speed -= 1.
-        run_cmd(4'b0000, 2'b00); // speed += 1
-        run_cmd(4'b0000, 2'b00); // speed += 1
-        run_cmd(4'b0001, 2'b00); // speed -= 1
+        run_cmd(4'b0000); // speed += 1
+        run_cmd(4'b0000); // speed += 1
+        run_cmd(4'b0001); // speed -= 1
 
-        // 0010: heading += heading_in (mod 4).
-        run_cmd(4'b0010, 2'b01); // turn by +1 -> east
+        // 0010: heading += 1 (mod 4).
+        run_cmd(4'b0010); // turn +1 -> east
+        run_cmd(4'b0011); // LED blue
+        run_cmd(4'b0100); // LED green
+        run_cmd(4'b0101); // LED red
+        run_cmd(4'b0110); // LED on
+        run_cmd(4'b0111); // LED off
 
-        run_cmd(4'b0011, 2'b00); // LED blue
-        run_cmd(4'b0100, 2'b00); // LED green
-        run_cmd(4'b0101, 2'b00); // LED red
-        run_cmd(4'b0110, 2'b00); // LED on
-        run_cmd(4'b0111, 2'b00); // LED off
+        run_cmd(4'b1000); // Fire on
+        run_cmd(4'b1001); // Fire off
 
-        run_cmd(4'b1000, 2'b00); // Fire on
-        run_cmd(4'b1001, 2'b00); // Fire off
-
-        // Move commands now use heading + speed:
         // 1010 = move forward, 1011 = move backward.
         // Heading map: 00 north(+Y), 01 east(+X), 10 south(-Y), 11 west(-X).
-        run_cmd(4'b1010, 2'b00); // forward while heading east -> X increases
-        run_cmd(4'b1011, 2'b00); // backward while heading east -> X decreases
+        run_cmd(4'b1010); // forward heading east  -> X increases
+        run_cmd(4'b1011); // backward heading east -> X decreases
 
-        run_cmd(4'b0010, 2'b01); // turn by +1 -> south
-        run_cmd(4'b1010, 2'b00); // forward while heading south -> Y decreases
-        run_cmd(4'b1011, 2'b00); // backward while heading south -> Y increases
+        run_cmd(4'b0010); // turn +1 -> south
+        run_cmd(4'b1010); // forward heading south  -> Y decreases
+        run_cmd(4'b1011); // backward heading south -> Y increases
 
-        run_cmd(4'b0010, 2'b01); // turn by +1 -> west
-        run_cmd(4'b1010, 2'b00); // forward while heading west -> X decreases
-        run_cmd(4'b0010, 2'b01); // turn by +1 -> north
-        run_cmd(4'b1010, 2'b00); // forward while heading north -> Y increases
+        run_cmd(4'b0010); // turn +1 -> west
+        run_cmd(4'b1010); // forward heading west   -> X decreases
+        run_cmd(4'b0010); // turn +1 -> north
+        run_cmd(4'b1010); // forward heading north  -> Y increases
 
-        // 1100: weapon_type += heading_in (mod 4).
-        run_cmd(4'b1100, 2'b01); // +1
-        run_cmd(4'b1100, 2'b10); // +2
-        run_cmd(4'b1100, 2'b01); // +1
-        run_cmd(4'b1100, 2'b00); // +0 (hold)
+        // 1100: weapon_type += 1 (mod 4).
+        run_cmd(4'b1100); // weapon +1
+        run_cmd(4'b1100); // weapon +1
+        run_cmd(4'b1100); // weapon +1
+        run_cmd(4'b1100); // weapon +1 (wraps back to 00)
 
-        // Reserved opcodes to exercise status handling (all reserved values).
-        run_cmd(4'b1101, 2'b00);
-        run_cmd(4'b1110, 2'b00);
-        run_cmd(4'b1111, 2'b00);
+        // Reserved opcodes to exercise status handling.
+        run_cmd(4'b1101);
+        run_cmd(4'b1110);
+        run_cmd(4'b1111);
 
-        // Additional speed updates with decrement behavior.
-        run_cmd(4'b0001, 2'b00);
-        run_cmd(4'b0000, 2'b00);
-        run_cmd(4'b0001, 2'b00);
+        // Additional speed updates.
+        run_cmd(4'b0001);
+        run_cmd(4'b0000);
+        run_cmd(4'b0001);
 
         $display("--- Robot Breadboard Testbench End ---");
         $finish;
