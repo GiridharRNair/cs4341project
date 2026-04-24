@@ -1,83 +1,74 @@
-# Robot Circuitry Simulation (Phase 3)
+# CS4341 Project
 
-Structural Verilog implementation of a robot control breadboard. Simulates robot state (speed, heading, position, weapon type) via clocked opcode commands.
+## Prerequisites
 
-## Setup
+- Python 3.8 or higher
+- Icarus Verilog (`iverilog`)
+- VVP (Verilog simulation runtime, comes with Icarus Verilog)
 
-Requirements: `iverilog` and `vvp` (Icarus Verilog)
-
-## Build & Run
-
+Install Icarus Verilog:
 ```bash
-make sim
+# macOS
+brew install icarus-verilog
+
+# Ubuntu/Debian
+sudo apt-get install iverilog
+
+# Other systems
+# Visit: http://iverilog.icarus.com/
 ```
 
-(Optional: `make clean` to remove build artifacts)
-
-## Project Files
-
-- `phase3_verilog/` — flat single-folder source layout required for submission
-- `phase3_verilog/robot_breadboard.v` — top-level breadboard module
-- `phase3_verilog/dff_async.v` — 1-bit D flip-flop (async reset)
-- `phase3_verilog/reg_n.v` — N-bit register built from DFFs
-- `phase3_verilog/decoder4to16.v`, `phase3_verilog/decoder2to4.v` — decoders
-- `phase3_verilog/mux2_1.v` — 2-to-1 multiplexer
-- `phase3_verilog/adder_n.v`, `phase3_verilog/twos_complement_n.v`, `phase3_verilog/splitter2.v` — arithmetic/logic modules
-- `phase3_verilog/robot_breadboard_tb.v` — testbench program/stimulus
-
-## Submission Command
+## Clone Locally
 
 ```bash
+git clone https://github.com/GiridharRNair/cs4341project.git
+cd cs4341project
+```
+
+## Local Development
+
+### Set Up Python Virtual Environment
+
+```bash
+# Create virtual environment
+python3 -m venv .venv
+
+# Activate virtual environment
+source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+## Run
+
+```bash
+# Run simulation
+make sim
+
+# Clean build artifacts
+make clean
+
+# Build documentation and submission files
 make submission
 ```
 
-This generates:
-- `submission/Cohort0x01.Phase3.Verilog.zip`
-- `submission/Cohort0x01.Phase3.output.txt`
 
-## Opcode Commands (0-13)
+## Additional Information
 
-| Opcode | Operation | Effect |
-|--------|-----------|--------|
-| 0000 | Increase speed | speed += 1 |
-| 0001 | Decrease speed | speed -= 1 |
-| 0010 | Turn command | heading += heading_in (wraps mod 4) |
-| 0011 | LED blue | led_color = 01 |
-| 0100 | LED green | led_color = 10 |
-| 0101 | LED red | led_color = 11 |
-| 0110 | LED on | led_signal = 1 |
-| 0111 | LED off | led_signal = 0 |
-| 1000 | Fire on | fire_bullets = 1 |
-| 1001 | Fire off | fire_bullets = 0 |
-| 1010 | Move forward | Moves position based on heading and speed |
-| 1011 | Move backward | Moves opposite heading based on speed |
-| 1100 | Weapon update | weapon_type += heading_in (mod 4) |
+The `circuitverse_project` directory includes information about the system design done in CircuitVerse. CircuitVerse has a feature to export circuits to Verilog, so this folder contains the Verilog export for AI to reference when writing the project code. The directory also contains the circuit in CircuitVerse file format (.cv).
 
-Opcodes 1101-1111 are reserved (generate error status).
+The `project_code` directory contains the main project code.
 
-## Movement Semantics
+The `project_details` directory holds information about the written portion of the project (charter, system design document, project description) in Markdown format. These will be exported to PDF for submission when executing the `make submission` command.
 
-When executing opcode 1010 (forward) or 1011 (backward), movement is derived from current heading and speed:
-- `00` North: forward = `+Y`, backward = `-Y`
-- `01` East: forward = `+X`, backward = `-X`
-- `10` South: forward = `-Y`, backward = `+Y`
-- `11` West: forward = `-X`, backward = `+X`
+The `project_guidelines` directory includes all project phase guidelines for AI to reference.
 
-## Testbench Output Format
+The `sample_verilog_code` directory contains the professor's Verilog code for AI to reference.
 
-Each line shows one clock cycle:
-```
-t=<time> op=<opcode> h=<heading> | speed=<val> heading=<val> ledC=<color> led=<0/1> fire=<0/1> x=<val> y=<val> weapon=<type> status=<code> fb=<16-bit> mem=<32-bit>
-```
+The `submission` directory includes all files needed for accurate submission.
 
-Key fields:
-- `op`, `h` — inputs sent this cycle
-- `speed`, `heading`, `led*`, `fire`, `x`, `y`, `weapon` — robot state outputs
-- `status` — error/warning code (00 = OK)
-- `fb` — 16-bit feedback loop register (holds X:Y from prior cycle)
-- `mem` — 32-bit memory register (snapshot of opcode + control/state fields)
+There is a Makefile in the root directory with commands (stated in the Local Development section) to run the simulation, clean build artifacts, and create submission files in the `submission` directory.
 
-## Status Codes
+The Python script `util.py` exports all markdown files from the `project_details` directory to PDF for submission when the `make submission` command is executed. 
 
-- `00` Success
-- `E1` Reserved opcode used (1101-1111)
