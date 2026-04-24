@@ -1,6 +1,7 @@
 ## Component Diagram
 
-[CircuitVerse Project Link](https://circuitverse.org/users/413178/projects/robot-03cbcf2f-4fcf-447c-bf3a-e71604f0f60a)
+CircuitVerse Project Link
+https://circuitverse.org/users/413178/projects/robot-03cbcf2f-4fcf-447c-bf3a-e71604f0f60a
 
 ![CircuitVerse design](CircuitVerseDesignImage.png)
 
