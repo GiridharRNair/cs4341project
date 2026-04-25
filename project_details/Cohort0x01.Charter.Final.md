@@ -24,7 +24,6 @@ List of cohort members:
 - Shaikh Raaid
 - Nadhif Mahmood
 - Neil Pauddar
-- Aditya Shivapooja
 - Ishaan Dhandapani
 - Sanya Hegde
 - Venkat Sai Eshwar Varma Sagihi
